@@ -34,15 +34,17 @@ jobs:
         run: |
           TAG=mochi-studio-v0.6.0-beta.1
           SOURCE=$(python3 -c 'import json; print(json.load(open("distribution/import.json"))["source_commit"])')
+          TAG_COMMIT=$(git rev-parse --verify "$TAG^{commit}")
+          test "$TAG_COMMIT" = "$SOURCE"
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft,targetCommitish > /tmp/release-state.json 2>/dev/null; then
             export SOURCE
             python3 - <<'PY'
           import json, os
           data=json.load(open('/tmp/release-state.json'))
-          assert data['isDraft'] and data['targetCommitish']==os.environ['SOURCE'], 'Refusing to overwrite an existing published or unrelated release'
+          assert data['isDraft'], 'Refusing to overwrite an existing published release'
           PY
           else
-            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$SOURCE" --draft --prerelease --title 'Mochi Studio 0.6.0-beta.1 · community preview' --notes-file presentation/installer-release-notes.en.md
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --prerelease --title 'Mochi Studio 0.6.0-beta.1 · community preview' --notes-file presentation/installer-release-notes.en.md
           fi
           gh release upload "$TAG" build/import-ready/* --repo "$GITHUB_REPOSITORY" --clobber
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease --notes-file presentation/installer-release-notes.en.md
