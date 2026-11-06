@@ -1,0 +1,52 @@
+{
+  "source_repository": "Jose-SMG/Pruebas",
+  "target_repository": "Jose-SMG/Mochi-test",
+  "tag": "mochi-studio-v0.6.0-beta.1",
+  "source_commit": "6b4e5ea2f80ab59375973c73034d1f16d020b49e",
+  "upstream_commit": "b1bc09de7f7c24a80bd8eca5729b8bee60f66402",
+  "version": "0.6.0-beta.1",
+  "official_release": false,
+  "distribution_permission_confirmed": true,
+  "assets": [
+    {
+      "name": "Coucou-Mochi-0.6.0-beta.1-macOS-universal.dmg",
+      "size_bytes": 44933775,
+      "sha256": "5449dddfbcd233b26474f53a70e0cc6ad6f880d221ec19f9e0ac387da6a3364c"
+    },
+    {
+      "name": "Coucou-Mochi-0.6.0-beta.1-Windows-x64-portable.zip",
+      "size_bytes": 15968217,
+      "sha256": "7e9a42c6d9d3b460f6df33b437ad33b0b4d7f5cec53331c65667d739febcf1dd"
+    },
+    {
+      "name": "Coucou-Mochi-0.6.0-beta.1-Windows-x64-setup.exe",
+      "size_bytes": 12344403,
+      "sha256": "4eeeafe767e44f36d6b48cb0a9d4db5b77298b7acc900262b5388b3bfe6f138a"
+    },
+    {
+      "name": "Coucou-Mochi-0.6.0-beta.1-Windows-x64.msi",
+      "size_bytes": 15937536,
+      "sha256": "a52935b55864c85db5e60a8b173e1aa8565a383e46a2251188b86d0133d1e8bd"
+    },
+    {
+      "name": "macOS-build-manifest.json",
+      "size_bytes": 601,
+      "sha256": "4f189e6337431a246962ed1277103cc765540f517e1c8a0aadd753ef05cfb394"
+    },
+    {
+      "name": "release-manifest.json",
+      "size_bytes": 2275,
+      "sha256": "7073a177e519150aad26b4590d9219bb5c331f3faf758d362b6a5f0b6c70a2d8"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "size_bytes": 451,
+      "sha256": "9ee3a217580be39a0a71ee135e12300bc0c1b0803a06107294d7be93c770884f"
+    },
+    {
+      "name": "Windows-build-manifest.json",
+      "size_bytes": 965,
+      "sha256": "828cbd768af941ba1b26de697d0028d586f47ab6a3c1de1cd6da28f186a49cf5"
+    }
+  ]
+}

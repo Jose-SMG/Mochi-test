@@ -1,4 +1,4 @@
-param([ValidateSet('fixture','state','drag','move','close','minimize','show','hover','context','capture','record','sample')][string]$Action, [string]$Out, [int]$AppPid, [long]$Handle, [int]$X, [int]$Y, [int]$EndX, [int]$EndY)
+param([ValidateSet('fixture','prepare-desktop','state','drag','move','close','minimize','show','hover','click','desktop-shortcut','context','capture','record','sample')][string]$Action, [string]$Out, [int]$AppPid, [long]$Handle, [int]$X, [int]$Y, [int]$EndX, [int]$EndY)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 Add-Type @'
@@ -15,6 +15,7 @@ public class MochiQA {
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h,out Rect r);
   [DllImport("user32.dll",CharSet=CharSet.Unicode)] public static extern int GetWindowText(IntPtr h,StringBuilder s,int n);
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
+  [DllImport("user32.dll")] public static extern void keybd_event(byte key,byte scan,uint flags,UIntPtr extra);
   [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr h);
   [DllImport("user32.dll")] public static extern bool SetCursorPos(int x,int y);
   [DllImport("user32.dll")] public static extern void mouse_event(uint flags,uint dx,uint dy,uint data,UIntPtr extra);
@@ -23,9 +24,20 @@ public class MochiQA {
   [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h,int c);
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr h);
   [DllImport("user32.dll")] public static extern IntPtr SetThreadDpiAwarenessContext(IntPtr c);
+  [StructLayout(LayoutKind.Sequential)] public struct MouseInput { public int dx,dy;public uint mouseData,flags,time;public UIntPtr extra; }
+  [StructLayout(LayoutKind.Explicit)] public struct InputUnion { [FieldOffset(0)] public MouseInput mouse; }
+  [StructLayout(LayoutKind.Sequential)] public struct Input { public uint type;public InputUnion data; }
+  [DllImport("user32.dll",SetLastError=true)] public static extern uint SendInput(uint count,Input[] input,int size);
+  [DllImport("user32.dll")] public static extern int GetSystemMetrics(int index);
+  [DllImport("user32.dll")] public static extern short GetAsyncKeyState(int key);
+  public static void Pointer(int x,int y,uint flags) {
+    var mi=new MouseInput {dx=(int)Math.Round(x*65535.0/(GetSystemMetrics(0)-1)),dy=(int)Math.Round(y*65535.0/(GetSystemMetrics(1)-1)),flags=flags|0x8000};
+    var input=new Input {type=0,data=new InputUnion {mouse=mi}};
+    if(SendInput(1,new[]{input},Marshal.SizeOf<Input>())!=1)throw new Exception("Native SendInput rejected mouse input: "+Marshal.GetLastWin32Error());
+  }
   public static Win[] Windows(int owner) {
     var list=new List<Win>();
-    EnumWindows((h,l)=>{uint p;GetWindowThreadProcessId(h,out p);if(p!=(uint)owner)return true;
+    EnumWindows((h,l)=>{uint p;GetWindowThreadProcessId(h,out p);if(owner!=0 && p!=(uint)owner)return true;
       Rect r;GetWindowRect(h,out r);var s=new StringBuilder(512);GetWindowText(h,s,512);
       list.Add(new Win {handle=h.ToInt64(),title=s.ToString(),x=r.Left,y=r.Top,width=r.Right-r.Left,height=r.Bottom-r.Top,visible=IsWindowVisible(h),minimized=IsIconic(h)});return true;
     },IntPtr.Zero);return list.ToArray();
@@ -51,24 +63,47 @@ switch ($Action) {
       $Label=[System.Windows.Forms.Label]::new();$Label.Text="Coucou contributor demo`n`nNative Windows test window`n`nMochi follows the exposed top edge.";$Label.Font=[System.Drawing.Font]::new('Segoe UI',15);$Label.Dock='Fill';$Label.Padding=[System.Windows.Forms.Padding]::new(28);$Form.Controls.Add($Label)
       $Form.Show();$Forms+=$Form
     }
+    foreach($Form in $Forms){
+      # A hidden console startup flag may suppress the first Form.Show().
+      # Explicitly show the real fixture, then bring its normal window forward.
+      [MochiQA]::ShowWindow($Form.Handle,9)|Out-Null
+      [MochiQA]::SetWindowPos($Form.Handle,[IntPtr]::Zero,0,0,0,0,0x43)|Out-Null
+      $Form.BringToFront();$Form.Activate()
+    }
     $Forms | ForEach-Object { @{handle=$_.Handle.ToInt64();title=$_.Text;x=$_.Left;y=$_.Top;width=$_.Width;height=$_.Height} } | ConvertTo-Json | Set-Content $Out
     $Timer=[System.Windows.Forms.Timer]::new();$Timer.Interval=500;$Timer.Add_Tick({if(Test-Path ($Out+'.stop')){[System.Windows.Forms.Application]::Exit()}});$Timer.Start()
     [System.Windows.Forms.Application]::Run()
   }
+  'prepare-desktop' {
+    $Changed=@()
+    foreach($Window in [MochiQA]::Windows(0)){
+      if($Window.visible -and $Window.title -eq 'System Properties'){[MochiQA]::PostMessage([IntPtr]::new($Window.handle),0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null;$Changed+=$Window.title}
+      elseif($Window.visible -and $Window.title -like '*GitHub*Host*'){[MochiQA]::ShowWindow([IntPtr]::new($Window.handle),6)|Out-Null;$Changed+=$Window.title}
+    }
+    ConvertTo-Json -InputObject @($Changed) -Compress
+  }
   'state' { ConvertTo-Json -InputObject @([MochiQA]::Windows($AppPid)) -Depth 4 -Compress }
   'drag' {
-    [MochiQA]::SetCursorPos($X,$Y)|Out-Null;Start-Sleep -Milliseconds 180
-    [MochiQA]::mouse_event(2,0,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 180
-    try {for($i=1;$i -le 32;$i++){[MochiQA]::SetCursorPos([int]($X+($EndX-$X)*$i/32),[int]($Y+($EndY-$Y)*$i/32))|Out-Null;Start-Sleep -Milliseconds 45}}
-    finally {[MochiQA]::mouse_event(4,0,0,0,[UIntPtr]::Zero)}
-    Start-Sleep -Milliseconds 700
+    [MochiQA]::Pointer($X,$Y,1);Start-Sleep -Milliseconds 1400
+    [MochiQA]::Pointer($X,$Y,3);Start-Sleep -Milliseconds 450
+    $Pressed=([MochiQA]::GetAsyncKeyState(1) -band 0x8000) -ne 0
+    try {for($i=1;$i -le 40;$i++){[MochiQA]::Pointer([int]($X+($EndX-$X)*$i/40),[int]($Y+($EndY-$Y)*$i/40),1);Start-Sleep -Milliseconds 55}}
+    finally {[MochiQA]::Pointer($EndX,$EndY,5)}
+    Start-Sleep -Milliseconds 900
     [MochiQA]::SetCursorPos(30,600)|Out-Null
+    @{method='Win32 SendInput';leftButtonObservedDown=$Pressed;from=@($X,$Y);to=@($EndX,$EndY)}|ConvertTo-Json -Compress
   }
   'move' { [MochiQA]::SetWindowPos([IntPtr]::new($Handle),[IntPtr]::Zero,$X,$Y,0,0,0x15)|Out-Null }
   'close' { [MochiQA]::PostMessage([IntPtr]::new($Handle),0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null }
   'minimize' { [MochiQA]::ShowWindow([IntPtr]::new($Handle),6)|Out-Null }
   'show' { [MochiQA]::ShowWindow([IntPtr]::new($Handle),9)|Out-Null;[MochiQA]::SetForegroundWindow([IntPtr]::new($Handle))|Out-Null }
   'hover' { [MochiQA]::SetCursorPos($X,$Y)|Out-Null;Start-Sleep -Milliseconds 800 }
+  'desktop-shortcut' {
+    try {foreach($Key in @(17,18,68)){[MochiQA]::keybd_event([byte]$Key,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 80}}
+    finally {foreach($Key in @(68,18,17)){[MochiQA]::keybd_event([byte]$Key,0,2,[UIntPtr]::Zero)}}
+    Start-Sleep -Milliseconds 1200
+  }
+  'click' { [MochiQA]::SetCursorPos($X,$Y)|Out-Null;Start-Sleep -Milliseconds 150;[MochiQA]::mouse_event(2,0,0,0,[UIntPtr]::Zero);[MochiQA]::mouse_event(4,0,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 300 }
   'context' { [MochiQA]::SetCursorPos($X,$Y)|Out-Null;Start-Sleep -Milliseconds 200;[MochiQA]::mouse_event(8,0,0,0,[UIntPtr]::Zero);[MochiQA]::mouse_event(16,0,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 300 }
   'capture' { Save-Screen $Out }
   'record' {

@@ -1,0 +1,36 @@
+name: Project checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  shared:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Shared room and appearance contract
+        run: node --test tests/mochi-scene.test.mjs
+      - name: Validate migration configuration and document assets
+        run: |
+          python3 - <<'PY'
+          import ast, json
+          from pathlib import Path
+          config=json.loads(Path('distribution/import.json').read_text())
+          assert config['target_repository']=='Jose-SMG/Mochi-test' and config['official_release'] is False
+          assert len(config['assets'])==8 and len({a['name'] for a in config['assets']})==8
+          for item in config['assets']:
+              assert len(item['sha256'])==64 and item['size_bytes']>0
+          ast.parse(Path('scripts/import-mochi-release.py').read_text())
+          for name in ['room-preview.gif','room.png','outfits.png','grip-renderer.png','room-and-outfits.mp4','room-and-outfits.es.mp4']:
+              assert (Path('presentation/review')/name).stat().st_size>0,name
+          assert Path('LICENSE').is_file() and Path('README.coucou.md').is_file()
+          print('Migration configuration, source syntax and all review assets are present.')
+          PY

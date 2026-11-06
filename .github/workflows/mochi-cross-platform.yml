@@ -4,7 +4,8 @@ on:
   pull_request:
     paths: ['NotchBuddy/**', 'windows/**', 'shared/**', 'tests/**', 'scripts/**', '.github/workflows/mochi-cross-platform.yml']
   push:
-    branches: ['concept/mochi-*', 'contrib/mochi-*']
+    branches: [main]
+    paths: ['NotchBuddy/**', 'windows/**', 'shared/**', 'tests/**', 'scripts/**', '.github/workflows/mochi-cross-platform.yml']
   workflow_dispatch:
 
 permissions:

@@ -4,12 +4,12 @@ An editable room, saved looks and native window companionship for Coucou, based 
 
 ## Start here
 
-- [Room and wardrobe draft](https://github.com/Jose-SMG/Pruebas/pull/1): source changes relative to the upstream snapshot.
-- [Window attachment and jumps draft](https://github.com/Jose-SMG/Pruebas/pull/2): stacked on the room contribution.
-- [Integrated source branch](https://github.com/Jose-SMG/Pruebas/tree/build/coucou-mochi-installers).
+- [Room and wardrobe draft](https://github.com/Jose-SMG/Mochi-test/pull/1): source changes relative to the upstream snapshot.
+- [Window attachment and jumps draft](https://github.com/Jose-SMG/Mochi-test/pull/2): stacked on the room contribution.
+- [Integrated source branch](https://github.com/Jose-SMG/Mochi-test/tree/main).
 - [Overlap with wardrobe PRs #1025, #737 and #738](WARDROBE-OVERLAP.md).
 
-These are draft reviews in the contributor's repository, not pull requests opened against Louis's repository. No merge or endorsement is implied. The feature branches exclude beta packaging and publication metadata.
+These are draft reviews in this dedicated repository, not pull requests opened against Louis's repository. No merge or endorsement is implied. The feature branches exclude beta packaging and publication metadata.
 
 ## Room and outfits
 
@@ -32,11 +32,11 @@ The second draft contains the AppKit/Win32 implementation: automatic edge select
 ## Build from source
 
 ```sh
-git clone --branch contrib/mochi-room-review-0.6 https://github.com/Jose-SMG/Pruebas.git coucou-review
+git clone --branch review/room-and-wardrobe https://github.com/Jose-SMG/Mochi-test.git coucou-review
 cd coucou-review
 ```
 
-For the stacked window contribution, check out `contrib/mochi-window-perch-review-0.6` instead.
+For the stacked window contribution, check out `review/window-grip-and-jumps` instead.
 
 On Mac, install Xcode and XcodeGen, then follow the project's normal development flow:
 

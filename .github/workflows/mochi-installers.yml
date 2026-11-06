@@ -1,9 +1,6 @@
 name: Coucou Mochi installers
 
 on:
-  push:
-    branches: [build/coucou-mochi-installers]
-    paths-ignore: ['presentation/**', '*.md']
   workflow_dispatch:
 
 permissions:
@@ -126,15 +123,6 @@ jobs:
         with:
           name: Coucou-Mochi-Windows-x64
           path: build/native-input
-      - name: Check out native accessibility test controller
-        uses: actions/checkout@v4
-        with:
-          ref: qa/mochi-runtime
-          path: native-controller
-          persist-credentials: false
-      - name: Use native controller helpers
-        shell: pwsh
-        run: Copy-Item native-controller/scripts/qa-* scripts/ -Force
       - name: Install the actual beta and verify its dependencies
         shell: pwsh
         run: |

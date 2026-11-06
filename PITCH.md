@@ -1,5 +1,9 @@
-Coucou with Mochi Home and Perch in one build.
+# Mochi Studio — contribution to Coucou
 
-This preview combines the room and native window-perching contributions for macOS and Windows. It keeps the original app identifiers, settings, wardrobe and Canvas fallback, and uses one offline 3D renderer on both platforms.
+A customizable room, saved appearances and native window companionship, with shared rendering on Mac and Windows.
 
-The build workflow produces a universal Mac DMG and Windows x64 EXE/MSI installers with source commit and checksums. Both native builds and installer packaging passed in the same GitHub Actions run; downloads and SHA-256 checksums are in INSTALLERS.md. Nothing has been published to the upstream repository or sent to Louis.
+[Source and design preview](presentation/review/README.md) · [Wardrobe overlap review](presentation/review/WARDROBE-OVERLAP.md) · [Validation limits](docs/mochi/KNOWN-ISSUES.md)
+
+The room/decor/camera interaction is the main distinct contribution. The canonical wardrobe representation, shared 3D dependency and resource cost need maintainer feedback. Native attachment/jumps remain a draft while end-to-end validation is incomplete.
+
+The source and original history are included so the maintainer can inspect and build the application independently. Coucou and Mochi remain credited to Louis Raillé; this is a community preview.

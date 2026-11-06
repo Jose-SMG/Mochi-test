@@ -1,0 +1,48 @@
+name: Import verified beta installers
+on:
+  push:
+    branches: [main]
+    paths: ['distribution/import.json', 'scripts/import-mochi-release.py', '.github/workflows/import-beta-release.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: import-mochi-beta
+  cancel-in-progress: false
+jobs:
+  import:
+    if: github.repository == 'Jose-SMG/Mochi-test'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Download the existing public beta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/import
+          gh release download mochi-studio-v0.6.0-beta.1 --repo Jose-SMG/Pruebas --dir build/import
+      - name: Verify source, sizes, checksums and manifests
+        run: python3 scripts/import-mochi-release.py
+      - name: Publish the verified files in this repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=mochi-studio-v0.6.0-beta.1
+          SOURCE=$(python3 -c 'import json; print(json.load(open("distribution/import.json"))["source_commit"])')
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft,targetCommitish > /tmp/release-state.json 2>/dev/null; then
+            export SOURCE
+            python3 - <<'PY'
+          import json, os
+          data=json.load(open('/tmp/release-state.json'))
+          assert data['isDraft'] and data['targetCommitish']==os.environ['SOURCE'], 'Refusing to overwrite an existing published or unrelated release'
+          PY
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$SOURCE" --draft --prerelease --title 'Mochi Studio 0.6.0-beta.1 · community preview' --notes-file presentation/installer-release-notes.en.md
+          fi
+          gh release upload "$TAG" build/import-ready/* --repo "$GITHUB_REPOSITORY" --clobber
+          gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease --notes-file presentation/installer-release-notes.en.md

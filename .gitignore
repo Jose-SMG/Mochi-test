@@ -25,3 +25,8 @@ NotchBuddy/Sources/App/Voice/GitHash.generated.swift
 
 # Local Mochi installer output
 build/
+
+# Local captures and Python caches
+presentation/production/
+__pycache__/
+*.pyc

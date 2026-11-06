@@ -16,3 +16,6 @@ Both native packages were built from the same source revision. The build checks 
 Windows is unsigned. macOS is ad-hoc signed and not notarized, so browser or system warnings may appear. The Mac package uses the upstream Debug configuration with `-O` optimization and does not include the PHONE_LINK/iCloud integration enabled by the original Release configuration. Windows uses Release.
 
 Source and SHA-256 checksums are included with the downloads. This is a community preview, not an official release or a statement of endorsement. Coucou, Mochi and the original artwork and sounds belong to Louis Raillé. Original source and dependency notices are retained.
+
+
+The installer files in this repository are verified, byte-for-byte copies of the previously published beta. `migration-provenance.json` and `distribution/import.json` retain their original source and checksums. See the [project page](https://github.com/Jose-SMG/Mochi-test) for source, design previews and known limitations.
