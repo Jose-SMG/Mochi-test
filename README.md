@@ -8,6 +8,8 @@
 
 Independent community project based on [Coucou](https://github.com/Louis-CFM/coucou), by Louis Raillé. Preview for macOS and Windows.
 
+For Coucou itself: [focused Canvas accessory candidate, screenshot and native checks](presentation/review/canvas/README.md). The room remains an independent project.
+
 [Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.3) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
 
 ![Room styles and editor](presentation/review/room-preview.gif)
@@ -83,13 +85,15 @@ See [the original Coucou README](README.coucou.md) and [contribution guidelines]
 | `docs/mochi-home/`, `docs/mochi-perch/` | Original concept documents |
 | `distribution/` | Verified source release and installer migration manifest |
 
-The room and native interaction work remain part of this independent project. Historical `review/*` branches and their draft PRs are archived design references: they retain the former app identity and must not be used to build or install the preview. Build current `main` only.
+The room and native interaction work remain part of this independent project. The historical room/window review branches and their draft PRs are archived design references: they retain the former app identity and must not be used to build or install the preview. Build current `main` only.
 
 [Wardrobe overlap notes](presentation/review/WARDROBE-OVERLAP.md) cover upstream PRs #1025, #737 and #738. Contributions to Coucou itself must be small, separate Canvas-only changes with no new dependencies, following upstream `CLAUDE.md`. The Three.js room is not proposed for upstream merging.
 
 ## Validation and provenance
 
-The installers workflow builds both native platforms directly from this repository. Release manifests identify the source commit, repository, independent app identifier and artifact hashes. Publishing requires both builds, isolation checks, native edge-selection tests and a Windows install/start/uninstall coexistence check to pass. Full native drag/follow/jump validation is still pending.
+**Published preview:** `0.1.0-beta.3`, built from `3713804904bb2ebde17029f3ce6997c589fdfd83` in [the successful native build](https://github.com/Jose-SMG/Mochi-test/actions/runs/42378280556). [Published source and artifact manifest](distribution/published-preview-manifest.json) · [Windows coexistence result](distribution/windows-coexistence.json).
+
+The installers workflow builds both native platforms directly from this repository. Release manifests identify the source commit, repository, independent app identifier and artifact hashes. Publishing requires both builds, isolation checks, native edge-selection tests and a Windows NSIS EXE install/start/uninstall coexistence check to pass. Full native drag/follow/jump validation is still pending.
 
 Previous copied installers are withdrawn; the import workflow is disabled by its retirement guard. See [the isolation changes](docs/mochi/INDEPENDENT-PREVIEW.md).
 

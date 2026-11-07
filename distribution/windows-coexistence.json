@@ -1,0 +1,12 @@
+{
+  "source_commit": "3713804904bb2ebde17029f3ce6997c589fdfd83",
+  "checks": [
+    "independent executable installed",
+    "native app runs with separate preferences",
+    "agent-hook installation disabled",
+    "independent preview executable actually removed",
+    "all six official app, data and Claude hook sentinels unchanged"
+  ],
+  "product": "Mochi Studio Preview",
+  "passed": true
+}

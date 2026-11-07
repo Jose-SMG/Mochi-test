@@ -2,7 +2,18 @@
 
 # Preview status and known limitations
 
-## Verified for the existing beta packages
+## Current independent preview: 0.1.0-beta.3
+
+[Both native builds and the source-verified publication passed](https://github.com/Jose-SMG/Mochi-test/actions/runs/42378280556), from `3713804904bb2ebde17029f3ce6997c589fdfd83`.
+
+- Universal macOS bundle: own identifier/version, bundled scene checks, real WebKit rendering/PNG export, ad-hoc signature and DMG verification.
+- Windows: 620 app tests and 36 relay tests passed (7 app tests ignored); EXE, MSI and portable ZIP compiled. Native edge-selection tests passed.
+- The actual NSIS EXE was installed, launched with separate preferences, and uninstalled in CI. The preview executable was removed and all six official Coucou/Claude sentinel files kept their hashes. [Result](../../distribution/windows-coexistence.json).
+- Both installers' public download URLs returned HTTP 200. The published artifact sizes and GitHub SHA-256 digests match the [source-build manifest](../../distribution/published-preview-manifest.json).
+
+This is a CI smoke/coexistence check. MSI installation, physical Mac/Windows coexistence, and full drag/follow/jump interactions have not been verified. Signing limitations below still apply.
+
+## Historical withdrawn beta packages
 
 The Mac and Windows installers were built from `6b4e5ea2f80ab59375973c73034d1f16d020b49e`, based on upstream `b1bc09de7f7c24a80bd8eca5729b8bee60f66402`.
 

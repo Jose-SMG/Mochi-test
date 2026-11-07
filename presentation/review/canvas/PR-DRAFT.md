@@ -4,12 +4,13 @@ Choosing glasses currently replaces the scarf. This adds one wardrobe choice, **
 
 The new `roundGlassesScarf` value reuses each accessory’s drawing, fade and front/behind projection. The existing outfit IDs and seasonal Auto remain unchanged. The new choice fits the existing wardrobe row; its label is translated, and the phone preference allow-list stays in sync with the shared Swift enum.
 
-![Actual Canvas comparison](https://raw.githubusercontent.com/Jose-SMG/Mochi-test/836c06a/presentation/review/canvas/glasses-scarf.png)
+![Actual Canvas comparison](https://raw.githubusercontent.com/Jose-SMG/Mochi-test/836c06a39f955e66b703e4a1da31f6abfdded78e/presentation/review/canvas/glasses-scarf.png)
 
 Validation:
 - Swift wardrobe tests and native Swift Canvas rendering passed in [the focused review workflow](https://github.com/Jose-SMG/Mochi-test/actions/runs/42377284944).
 - Frontend tests, TypeScript, localization and release-note checks passed.
 - The included development preview checks 216 actual Canvas pixel comparisons across sizes, head turns, presence and mailbox morph. Run Vite in `windows/` and open `/dev/accessory-combination.html`.
+- The actual wardrobe shows the new choice; hover, selection, Spanish labels and panel bounds work. Mini Mochi rendering stays unchanged.
 
 This is one built-in combination, not a general wardrobe layering system. It has no room, WebView, Three.js, new dependency, app identity or release change.
 
