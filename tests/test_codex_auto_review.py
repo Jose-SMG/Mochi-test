@@ -184,7 +184,7 @@ class AutoReviewTests(unittest.TestCase):
 class RelaySubprocessTests(unittest.TestCase):
     """Run the actual extracted relay as a subprocess against an isolated socket.
 
-    The relay always connects to ~/Library/Application Support/NotchBuddy/nb.sock, so
+    The relay always connects to ~/Library/Application Support/MochiStudioPreview/nb.sock, so
     the subprocess gets a throwaway HOME (kept short for the sockaddr_un limit) and a
     throwaway CODEX_HOME. Neither the production socket nor the real ~/.codex is ever
     touched, and no native Codex configuration is written.
@@ -201,7 +201,7 @@ class RelaySubprocessTests(unittest.TestCase):
         self.transcript = self.codex_home / 'sessions/rollout.jsonl'
         self.relay = self.root / 'nb-hook.py'
         self.relay.write_text(relay_source(), encoding='utf-8')
-        self.socket_path = self.home / 'Library/Application Support/NotchBuddy/nb.sock'
+        self.socket_path = self.home / 'Library/Application Support/MochiStudioPreview/nb.sock'
         self.socket_path.parent.mkdir(parents=True)
         self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.server.bind(str(self.socket_path))
@@ -210,9 +210,9 @@ class RelaySubprocessTests(unittest.TestCase):
         self.addCleanup(self.server.close)
 
     def _isolated_root(self):
-        # The fake HOME has to keep ~/Library/Application Support/NotchBuddy/nb.sock
+        # The fake HOME has to keep ~/Library/Application Support/MochiStudioPreview/nb.sock
         # within sockaddr_un, so prefer a short base directory when one is available.
-        suffix = '/Library/Application Support/NotchBuddy/nb.sock'
+        suffix = '/Library/Application Support/MochiStudioPreview/nb.sock'
         for base in ('/tmp', tempfile.gettempdir(), str(ROOT)):
             try:
                 root = Path(tempfile.mkdtemp(prefix='nbhook-relay-', dir=base))

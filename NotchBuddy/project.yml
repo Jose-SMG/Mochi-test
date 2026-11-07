@@ -143,9 +143,9 @@ targets:
         CFBundleName: Mochi Studio Preview
         CFBundleDisplayName: Mochi Studio Preview
         CFBundleIdentifier: io.github.jose-smg.mochistudio.preview
-        CFBundleVersion: "101"
+        CFBundleVersion: "102"
         CFBundleShortVersionString: "0.1.0"
-        MochiPreviewVersion: "0.1.0-beta.1"
+        MochiPreviewVersion: "0.1.0-beta.2"
         CFBundlePackageType: APPL
         LSUIElement: YES
         NSHighResolutionCapable: YES

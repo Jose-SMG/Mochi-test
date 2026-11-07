@@ -8,7 +8,7 @@
 
 Independent community project based on [Coucou](https://github.com/Louis-CFM/coucou), by Louis Raillé. Preview for macOS and Windows.
 
-[Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.1) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
+[Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.2) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
 
 ![Room styles and editor](presentation/review/room-preview.gif)
 
@@ -38,10 +38,10 @@ The source includes automatic exposed-edge selection, arm grip, window following
 
 | System | Installer |
 | --- | --- |
-| macOS 15+, Apple Silicon and Intel | [Universal DMG](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-preview-v0.1.0-beta.1/Mochi-Studio-Preview-0.1.0-beta.1-macOS-universal.dmg) |
-| Windows 10/11 x64 | [Setup EXE](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-preview-v0.1.0-beta.1/Mochi-Studio-Preview-0.1.0-beta.1-Windows-x64-setup.exe) |
+| macOS 15+, Apple Silicon and Intel | [Universal DMG](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-preview-v0.1.0-beta.2/Mochi-Studio-Preview-0.1.0-beta.2-macOS-universal.dmg) |
+| Windows 10/11 x64 | [Setup EXE](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-preview-v0.1.0-beta.2/Mochi-Studio-Preview-0.1.0-beta.2-Windows-x64-setup.exe) |
 
-The [release](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.1) also includes MSI, portable ZIP, source manifests and SHA-256 checksums. This preview uses `io.github.jose-smg.mochistudio.preview` and its own `MochiStudioPreview` data directory. It does not migrate or remove official Coucou settings. The release link becomes available after the native CI checks pass.
+The [release](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.2) also includes MSI, portable ZIP, source manifests and SHA-256 checksums. This preview uses `io.github.jose-smg.mochistudio.preview` and its own `MochiStudioPreview` data directory. It does not migrate or remove official Coucou settings. The release link becomes available after the native CI checks pass.
 
 Windows is unsigned. The Mac package is ad-hoc signed and not notarized; its optimized Debug configuration excludes the PHONE_LINK/iCloud integration enabled by upstream Release. Browser/system warnings may remain. [Installation guide in Spanish](INSTALLERS.md).
 
@@ -97,7 +97,7 @@ Previous copied installers are withdrawn; the import workflow is disabled by its
 
 | Version | Changes |
 | --- | --- |
-| [0.1.0](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.1) | Independent community preview, separate identity and data, source-built installers |
+| [0.1.0](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.2) | Independent community preview, separate identity and data, source-built installers |
 
 ## Credits and license
 
