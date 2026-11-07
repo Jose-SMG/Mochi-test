@@ -33,7 +33,7 @@ pub fn claude_hooks_present(settings: &Value) -> bool {
             hooks.iter().any(|hook| {
                 hook.get("command")
                     .and_then(Value::as_str)
-                    .is_some_and(|c| c.contains("NotchBuddy") || c.contains("coucou"))
+                    .is_some_and(|c| c.contains(crate::preview_identity::DATA_DIRECTORY) || c.contains(crate::preview_identity::HOOK_MARKER))
             })
         })
     })
@@ -52,11 +52,11 @@ fn read_json(path: &PathBuf) -> Value {
 
 /// Pill ID → connected, for every hook-driven pill.
 pub fn status() -> HashMap<String, bool> {
-    let claude = claude_hooks_present(&read_json(&crate::hooks::settings_path()));
+    let claude = crate::preview_identity::AGENT_HOOKS_ENABLED && claude_hooks_present(&read_json(&crate::hooks::settings_path()));
     let mut out = HashMap::new();
     out.insert("integration_claude".to_string(), claude);
     for agent in crate::agents::list() {
-        out.insert(format!("agent_{}", agent.id), agent.installed);
+        out.insert(format!("agent_{}", agent.id), crate::preview_identity::AGENT_HOOKS_ENABLED && agent.installed);
     }
     // The Cursor pill also carries Claude Code run in Cursor's terminal, which
     // Claude Code's own hooks report.
@@ -80,11 +80,11 @@ mod tests {
     fn the_hook_coucou_writes_is_installed() {
         assert!(claude_hooks_present(&settings(
             r#"{"hooks":{"SessionStart":[{"hooks":[
-              {"type":"command","command":"\"C:/Users/me/AppData/Local/Coucou/bin/mochi-studio-preview-hook.exe\" SessionStart"}]}]}}"#
+              {"type":"command","command":"\"C:/Users/me/AppData/Local/MochiStudioPreview/bin/mochi-studio-preview-hook.exe\" SessionStart"}]}]}}"#
         )));
         assert!(claude_hooks_present(&settings(
             r#"{"hooks":{"SessionStart":[{"hooks":[
-              {"type":"command","command":"'/home/me/.local/share/coucou/bin/coucou-hook' SessionStart"}]}]}}"#
+              {"type":"command","command":"'/home/me/.local/share/mochi-studio-preview/bin/mochi-studio-preview-hook' SessionStart"}]}]}}"#
         )));
     }
 
@@ -92,11 +92,11 @@ mod tests {
     fn the_mac_builds_hooks_count_too() {
         assert!(claude_hooks_present(&settings(
             r#"{"hooks":{"SessionStart":[{"hooks":[
-              {"type":"command","command":"$HOME/.claude/coucou/nb-hook"}]}]}}"#
+              {"type":"command","command":"$HOME/.claude/MochiStudioPreview/nb-hook"}]}]}}"#
         )));
         assert!(claude_hooks_present(&settings(
             r#"{"hooks":{"SessionStart":[{"hooks":[
-              {"type":"command","command":"/Applications/NotchBuddy.app/.../nb-hook"}]}]}}"#
+              {"type":"command","command":"/Applications/MochiStudioPreview.app/.../nb-hook"}]}]}}"#
         )));
     }
 
@@ -105,7 +105,7 @@ mod tests {
         assert!(claude_hooks_present(&settings(
             r#"{"hooks":{"SessionStart":[
               {"hooks":[{"type":"command","command":"/usr/local/bin/other-tool"}]},
-              {"hooks":[{"type":"command","command":"$HOME/.claude/coucou/nb-hook"}]}]}}"#
+              {"hooks":[{"type":"command","command":"$HOME/.claude/MochiStudioPreview/nb-hook"}]}]}}"#
         )));
     }
 
@@ -123,8 +123,17 @@ mod tests {
     fn hooks_for_other_events_do_not_count() {
         assert!(!claude_hooks_present(&settings(
             r#"{"hooks":{"PreToolUse":[{"hooks":[
-              {"type":"command","command":"$HOME/.claude/coucou/nb-hook"}]}]}}"#
+              {"type":"command","command":"$HOME/.claude/MochiStudioPreview/nb-hook"}]}]}}"#
         )));
+    }
+
+    #[test]
+    fn official_coucou_is_not_the_preview() {
+        let official = serde_json::json!({"hooks":{"SessionStart":[{"hooks":[
+            {"command":"C:/Users/me/AppData/Local/Coucou/bin/coucou-hook.exe SessionStart"},
+            {"command":"/Users/me/Library/Application Support/NotchBuddy/nb-hook SessionStart"}
+        ]}]}});
+        assert!(!claude_hooks_present(&official));
     }
 
     #[test]

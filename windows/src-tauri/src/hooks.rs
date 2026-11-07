@@ -235,6 +235,10 @@ fn plan_to_preview(plan: config_file::Plan) -> HookPreview {
 /// changed in between is refused rather than overwritten (see config_file).
 pub fn write(install: bool, fingerprint: &str) -> Result<String, String> {
     crate::preview_identity::require_agent_hooks()?;
+    write_confirmed(install, fingerprint)
+}
+
+fn write_confirmed(install: bool, fingerprint: &str) -> Result<String, String> {
     let backups = config_file::apply(&edits(install), fingerprint)?;
     Ok(backups.first().map(|p| p.to_string_lossy().to_string()).unwrap_or_default())
 }
@@ -606,7 +610,10 @@ mod tests {
         // Install.
         let plan = preview(true).expect("a BOM must not stop the preview");
         assert!(plan.diff.contains("mochi-studio-preview-hook"), "the diff must show what changes");
-        let backup = write(true, &plan.fingerprint).expect("install should succeed");
+        let denied = write(true, &plan.fingerprint).unwrap_err();
+        assert!(denied.contains("disabled in Mochi Studio Preview"));
+        assert_eq!(std::fs::read(&path).unwrap(), bytes, "the public preview command must not change official settings");
+        let backup = write_confirmed(true, &plan.fingerprint).expect("the private merge engine still supports backups");
 
         // The backup holds the original bytes, BOM and all.
         assert_eq!(std::fs::read(&backup).unwrap(), bytes);
@@ -623,7 +630,7 @@ mod tests {
         // A file that moved since the preview is refused, and left alone.
         let stale = preview(false).unwrap();
         std::fs::write(&path, br#"{"model":"someone-else-edited-this"}"#).unwrap();
-        let err = write(false, &stale.fingerprint).unwrap_err();
+        let err = write_confirmed(false, &stale.fingerprint).unwrap_err();
         assert!(err.contains("changed since the preview"), "got: {err}");
         let untouched: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
         assert_eq!(untouched["model"], "someone-else-edited-this");

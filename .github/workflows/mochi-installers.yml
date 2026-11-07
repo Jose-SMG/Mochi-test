@@ -40,13 +40,19 @@ jobs:
         with: {persist-credentials: false}
       - uses: actions/setup-node@v4
         with: {node-version: 24}
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
+        id: mac-cache
         with:
           path: build/mochi-xcode
           key: mochi-preview-xcode-${{ hashFiles('NotchBuddy/project.yml') }}-${{ github.sha }}
           restore-keys: mochi-preview-xcode-
       - run: brew install xcodegen
       - run: bash scripts/build-mochi-macos.sh
+      - uses: actions/cache/save@v4
+        if: always() && steps.mac-cache.outputs.cache-hit != 'true'
+        with:
+          path: build/mochi-xcode
+          key: ${{ steps.mac-cache.outputs.cache-primary-key }}
       - uses: actions/upload-artifact@v4
         with:
           name: Mochi-Studio-Preview-macOS
@@ -65,7 +71,8 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: windows/package-lock.json
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
+        id: windows-cache
         with:
           path: |
             ~/.cargo/registry
@@ -78,18 +85,25 @@ jobs:
             mochi-installers-windows-
       - shell: pwsh
         run: ./scripts/build-mochi-windows.ps1
+      - uses: actions/cache/save@v4
+        if: always() && steps.windows-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            windows/target
+          key: ${{ steps.windows-cache.outputs.cache-primary-key }}
       - name: Install, launch and uninstall without touching official Coucou
         shell: pwsh
         run: |
           $Installer = Get-ChildItem 'build/mochi-installers/windows/*-setup.exe'
           ./scripts/qa-preview-coexistence.ps1 -Installer $Installer.FullName
+          Copy-Item build/coexistence/windows-coexistence.json build/mochi-installers/windows/
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Mochi-Studio-Preview-Windows
-          path: |
-            build/mochi-installers/windows/*.*
-            build/coexistence/*.json
+          path: build/mochi-installers/windows/*.*
           if-no-files-found: error
   publish:
     name: Publish only verified builds of this exact source

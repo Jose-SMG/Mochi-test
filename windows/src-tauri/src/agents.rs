@@ -1035,15 +1035,15 @@ mod tests {
     use crate::config_file::tests::scratch;
 
     fn linux() -> Relay {
-        Relay { exe: "/home/me/.local/share/coucou/bin/coucou-hook".into(), windows: false }
+        Relay { exe: "/home/me/.local/share/mochi-studio-preview/bin/mochi-studio-preview-hook".into(), windows: false }
     }
 
     fn windows(exe: &str) -> Relay {
         Relay { exe: exe.into(), windows: true }
     }
 
-    const WIN: &str = r"C:\Users\me\AppData\Local\Coucou\bin\mochi-studio-preview-hook.exe";
-    const WIN_SPACE: &str = r"C:\Users\Jane O'Neil\AppData\Local\Coucou\bin\mochi-studio-preview-hook.exe";
+    const WIN: &str = r"C:\Users\me\AppData\Local\MochiStudioPreview\bin\mochi-studio-preview-hook.exe";
+    const WIN_SPACE: &str = r"C:\Users\Jane O'Neil\AppData\Local\MochiStudioPreview\bin\mochi-studio-preview-hook.exe";
 
     /// Installs then uninstalls `agent` in a fresh home holding `existing` in
     /// its first file, and returns (installed file, uninstalled file).
@@ -1079,7 +1079,7 @@ mod tests {
     fn the_command_is_quoted_for_the_shell_that_runs_it() {
         assert_eq!(
             linux().command(Shell::Cmd, "--agent codex"),
-            "'/home/me/.local/share/coucou/bin/coucou-hook' --agent codex"
+            "'/home/me/.local/share/mochi-studio-preview/bin/mochi-studio-preview-hook' --agent codex"
         );
         let w = windows(WIN);
         assert_eq!(
@@ -1097,7 +1097,7 @@ mod tests {
         assert_eq!(spaced.command(Shell::Cmd, "x"), format!("\"{WIN_SPACE}\" x"));
         assert_eq!(
             spaced.command(Shell::PowerShell, "x"),
-            r"& 'C:\Users\Jane O''Neil\AppData\Local\Coucou\bin\mochi-studio-preview-hook.exe' x"
+            r"& 'C:\Users\Jane O''Neil\AppData\Local\MochiStudioPreview\bin\mochi-studio-preview-hook.exe' x"
         );
     }
 
@@ -1137,8 +1137,8 @@ mod tests {
 
     #[test]
     fn installing_twice_leaves_one_entry_per_event() {
-        let once = gemini_install(&json!({}), &[("BeforeTool".into(), "'x/coucou-hook' --agent gemini PreToolUse".into(), 5000)]).unwrap();
-        let twice = gemini_install(&once, &[("BeforeTool".into(), "'y/coucou-hook' --agent gemini PreToolUse".into(), 5000)]).unwrap();
+        let once = gemini_install(&json!({}), &[("BeforeTool".into(), "'x/mochi-studio-preview-hook' --agent gemini PreToolUse".into(), 5000)]).unwrap();
+        let twice = gemini_install(&once, &[("BeforeTool".into(), "'y/mochi-studio-preview-hook' --agent gemini PreToolUse".into(), 5000)]).unwrap();
         assert_eq!(twice["hooks"]["BeforeTool"].as_array().unwrap().len(), 1);
     }
 
@@ -1222,7 +1222,7 @@ mod tests {
 
     #[test]
     fn a_new_cursor_file_gets_its_version() {
-        let after = cursor_install(&json!({}), "'x/coucou-hook' --agent cursor").unwrap();
+        let after = cursor_install(&json!({}), "'x/mochi-studio-preview-hook' --agent cursor").unwrap();
         assert_eq!(after["version"], 1);
         // A version the user set is theirs.
         let after = cursor_install(&json!({ "version": 2 }), "c").unwrap();
@@ -1321,7 +1321,7 @@ mod tests {
             let main = std::fs::read_to_string(&agent.files(&home)[0]).unwrap();
             // The relay itself, at this machine's path, as a string literal: no
             // shell, no macOS path.
-            assert!(main.contains(r#""/home/me/.local/share/coucou/bin/coucou-hook""#), "{agent:?}");
+            assert!(main.contains(r#""/home/me/.local/share/mochi-studio-preview/bin/mochi-studio-preview-hook""#), "{agent:?}");
             assert!(!main.contains("/bin/sh") && !main.contains("nb-hook"), "{agent:?}");
             assert!(main.contains(&format!("'--agent', '{}'", agent.id())), "{agent:?}");
             // Never a verdict for the agent.
