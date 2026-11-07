@@ -1894,6 +1894,7 @@ final class HookServer: @unchecked Sendable {
 
     /// Returns true if our statusLine command is installed in ~/.claude/settings.json.
     static func statusLineInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         let url = FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".claude/settings.json")
         guard let data = try? Data(contentsOf: url),
@@ -2116,6 +2117,7 @@ final class HookServer: @unchecked Sendable {
     /// True when ~/.claude/settings.json already routes Claude Code events to Coucou.
     /// Cursor sessions ride on these same hooks, so they share this state.
     static func claudeHooksInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         #if APPSTORE
         // Sandboxed: can't read ~/.claude directly — check the install flag set on write.
         return UserDefaults.standard.bool(forKey: "coucouHooksInstalled")
@@ -2164,6 +2166,7 @@ final class HookServer: @unchecked Sendable {
     // MARK: Installed-state detection
 
     static func geminiHooksInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let data = try? Data(contentsOf: geminiSettingsURL),
               let settings = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let hooks = settings["hooks"] as? [String: Any] else { return false }
@@ -2185,6 +2188,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     static func agyHooksInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let data = try? Data(contentsOf: agyHooksURL),
               let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let coucou = root["coucou"] else { return false }
@@ -2414,6 +2418,7 @@ final class HookServer: @unchecked Sendable {
 
     /// True when ~/.codex/hooks.json already routes Codex events to Coucou's nb-hook.
     static func codexHooksInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let data = try? Data(contentsOf: codexHooksURL),
               let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let hooks = root["hooks"] as? [String: Any] else { return false }
@@ -2539,6 +2544,7 @@ final class HookServer: @unchecked Sendable {
 
     /// True when ~/.copilot/hooks/coucou.json already routes Copilot events to Coucou's nb-hook.
     static func copilotHooksInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let data = try? Data(contentsOf: copilotHooksURL),
               let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let hooks = root["hooks"] as? [String: Any] else { return false }
@@ -2660,6 +2666,7 @@ final class HookServer: @unchecked Sendable {
 
     /// True when ~/.config/muse/settings.json already routes Muse events to Coucou's nb-hook.
     static func museHooksInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let data = try? Data(contentsOf: museSettingsURL),
               let settings = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let hooks = settings["hooks"] as? [String: Any] else { return false }
@@ -2787,6 +2794,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     static func openCodePluginInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let content = try? String(contentsOf: openCodePluginURL, encoding: .utf8) else { return false }
         return content.contains("nb-hook") && content.contains("opencode")
     }
@@ -2925,6 +2933,7 @@ export const CoucouPlugin = async (_ctx) => ({
     }
 
     static func ampPluginInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let content = try? String(contentsOf: ampPluginURL, encoding: .utf8) else { return false }
         return content.contains("nb-hook") && content.contains("'amp'")
     }
@@ -3042,6 +3051,7 @@ export default function (amp: any): void {
     }
 
     static func hermesPluginInstalled() -> Bool {
+        guard PreviewIdentity.agentHooksEnabled else { return false }
         guard let content = try? String(contentsOf: hermesInitPyURL, encoding: .utf8) else { return false }
         return content.contains("nb-hook") && content.contains("hermes")
     }

@@ -2,7 +2,7 @@
 
 Los instaladores anteriores se han retirado porque compartían los identificadores de Coucou.
 
-La nueva [preview independiente](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.2) se publica cuando pasan las compilaciones y comprobaciones de aislamiento. GitHub genera el DMG universal de macOS y los instaladores EXE/MSI de Windows desde el código de este repositorio; los manifiestos indican el commit y las sumas SHA-256.
+La nueva [preview independiente](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.3) se publica cuando pasan las compilaciones y comprobaciones de aislamiento. GitHub genera el DMG universal de macOS y los instaladores EXE/MSI de Windows desde el código de este repositorio; los manifiestos indican el commit y las sumas SHA-256.
 
 En Mac, abre el DMG y arrastra **Mochi Studio Preview** a Aplicaciones. En Windows, ejecuta el EXE o MSI. Usa nombre, versión, identificadores y ajustes propios, y puede convivir con Coucou. No importa ni elimina las preferencias de Coucou. Los hooks de agentes, atajos globales y actualizaciones automáticas están desactivados.
 

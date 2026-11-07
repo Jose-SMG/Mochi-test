@@ -55,7 +55,12 @@ try {
     if ($Uninstaller.Count -ne 1) { throw 'Preview uninstaller not found' }
     $Remove = Start-Process $Uninstaller[0].FullName -ArgumentList '/S' -PassThru -Wait
     if ($Remove.ExitCode -ne 0) { throw "Uninstall failed: $($Remove.ExitCode)" }
-    $Report.checks += 'independent preview uninstalls'
+    # NSIS can hand off to a temporary child uninstaller before its parent exits.
+    # Wait for actual removal before checking that official files survived.
+    $Deadline = (Get-Date).AddSeconds(60)
+    while ((Test-Path $Exe) -and (Get-Date) -lt $Deadline) { Start-Sleep -Milliseconds 250 }
+    if (Test-Path $Exe) { throw 'Preview executable still exists after uninstall' }
+    $Report.checks += 'independent preview executable actually removed'
     foreach ($Path in $Official) {
         if (-not (Test-Path $Path) -or (Get-FileHash $Path).Hash -ne $Hashes[$Path]) { throw "Official file changed: $Path" }
     }

@@ -4,7 +4,7 @@ Louis’s November 7 review asks for independent builds, reproducible provenance
 
 | Scope | Preview |
 | --- | --- |
-| Application | Mochi Studio Preview 0.1.0 beta 2 |
+| Application | Mochi Studio Preview 0.1.0 beta 3 |
 | Bundle identifiers, both platforms | io.github.jose-smg.mochistudio.preview |
 | Mac support and log directories | MochiStudioPreview |
 | Windows roaming/local data | MochiStudioPreview |
