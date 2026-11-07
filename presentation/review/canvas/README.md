@@ -1,3 +1,5 @@
+> **Current status:** the fixed glasses-and-scarf preset below is a historical prototype. The next step is the [head/face/neck stacking proposal](STACKING-PROPOSAL.md), with [a ready-to-publish issue form](OPEN-STACKING-ISSUE.md). Implementation is waiting for agreement on the design and for Coucou PR #1025 to be settled.
+
 # Canvas accessory contribution
 
 The focused candidate adds one wardrobe choice, **Round glasses + scarf**, using the existing accessories on both macOS SwiftUI Canvas and Windows/Linux Canvas 2D. It leaves seasonal Auto and existing outfit IDs intact, adds a translated label, and keeps the existing phone preference allow-list in sync. The room and preview identity changes are excluded.

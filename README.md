@@ -8,7 +8,7 @@
 
 Independent community project based on [Coucou](https://github.com/Louis-CFM/coucou), by Louis Raillé. Preview for macOS and Windows.
 
-For Coucou itself: [focused Canvas accessory candidate, screenshot and native checks](presentation/review/canvas/README.md). The room remains an independent project.
+For Coucou itself: [head/face/neck stacking proposal](presentation/review/canvas/STACKING-PROPOSAL.md), awaiting design agreement and PR #1025. The [previous Canvas prototype](presentation/review/canvas/README.md) is retained as a reference. The room remains an independent project.
 
 [Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.3) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
 

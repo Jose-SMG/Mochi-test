@@ -1,3 +1,5 @@
+> **On hold after maintainer feedback.** This preset-based PR draft is kept as a reference. Use the [stacking proposal](STACKING-PROPOSAL.md) for the current design discussion; do not open this old PR while that discussion and #1025 are pending.
+
 # Add a glasses and scarf combination to Mochi’s wardrobe
 
 Choosing glasses currently replaces the scarf. This adds one wardrobe choice, **Round glasses + scarf**, that draws both existing accessories together on macOS and Windows/Linux.
