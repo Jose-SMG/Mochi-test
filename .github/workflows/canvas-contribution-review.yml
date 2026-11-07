@@ -1,0 +1,62 @@
+name: Canvas accessory contribution review
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/canvas-contribution-review.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  macos:
+    name: Native Swift wardrobe and Canvas render
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 245f21a1d1ba7d54ad155a19fb0838d6533a9530
+          persist-credentials: false
+      - name: Test the original wardrobe plus the new combination
+        run: bash scripts/test-wardrobe.sh
+      - name: Render the actual Swift Canvas accessory combination
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          source=Path('scripts/RenderOutfits.swift').read_text()
+          for name in ['targetOutfits','rollOutfits','transitionOutfits']:
+              source=re.sub(r'private let '+name+r': \[Outfit\] = \[[^\]]*\]', 'private let '+name+': [Outfit] = [.roundGlasses, .scarf, .roundGlassesScarf]', source)
+          Path('/tmp/RenderCanvasCombination.swift').write_text(source)
+          PY
+          swiftc -parse-as-library -sdk "$(xcrun --sdk macosx --show-sdk-path)" \
+            NotchBuddy/Sources/CoucouKit/IslandScreenGeometry.swift \
+            NotchBuddy/Sources/CoucouKit/IslandTypes.swift \
+            NotchBuddy/Sources/CoucouKit/MochiWardrobe.swift \
+            NotchBuddy/Sources/CoucouKit/BotEngine.swift \
+            NotchBuddy/Sources/CoucouKit/MochiOutfitDrawing.swift \
+            /tmp/RenderCanvasCombination.swift -framework AppKit -framework SwiftUI -o /tmp/canvas-combination
+          /tmp/canvas-combination
+          test -s /tmp/coucou-outfits.png
+          test -s /tmp/coucou-roll.png
+          test -s /tmp/coucou-transition.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Native-Swift-Canvas-combination
+          path: /tmp/coucou-*.png
+          if-no-files-found: error
+  frontend:
+    name: Original frontend with accessory patch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 245f21a1d1ba7d54ad155a19fb0838d6533a9530
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - run: npm ci --ignore-scripts
+        working-directory: windows
+      - run: npx tsc --noEmit
+        working-directory: windows
+      - run: npm test
+        working-directory: windows
+      - run: python3 scripts/test-localization.py
+      - run: python3 scripts/test-whats-new.py

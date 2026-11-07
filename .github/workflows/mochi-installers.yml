@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: mochi-preview-${{ github.ref }}
+  group: mochi-preview-${{ github.ref }}-${{ github.sha }}
   cancel-in-progress: false
 
 jobs:
