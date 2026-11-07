@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Mochi · glasses + scarf</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#15171c;color:#eceef3}body{max-width:900px;margin:56px auto;padding:0 24px}h1{font-size:28px;font-weight:600;margin-bottom:8px}p{color:#a6aab6}main{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}article{background:#1d2027;border:1px solid #30343e;border-radius:18px;text-align:center;padding:20px}canvas{width:220px;height:220px;max-width:100%}label{display:block;font-size:14px;margin-bottom:8px}button{border:1px solid #515968;border-radius:8px;background:#303747;color:inherit;padding:10px 14px;cursor:pointer}#checks{font:12px ui-monospace,monospace;margin-top:28px}
+</style>
+<h1>Glasses + scarf</h1>
+<p>One wardrobe choice. Both existing accessories, drawn together on Mochi's Canvas.</p>
+<main></main>
+<p><button id="turn">Turn Mochi</button></p><div id="checks"></div>
+<script type="module">
+import { BotEngine } from '../src/mochi/engine.ts';
+import { drawOutfitBehind, drawOutfitFront, makeHead } from '../src/mochi/outfits.ts';
+const choices=[['roundGlasses','Round glasses'],['scarf','Scarf'],['roundGlassesScarf','Round glasses + scarf']];
+const bots=choices.map(([outfit,title])=>{const card=document.createElement('article'),label=document.createElement('label'),canvas=document.createElement('canvas');label.textContent=title;canvas.width=canvas.height=440;card.append(canvas,label);document.querySelector('main').append(card);const bot=new BotEngine();bot.setOutfit(outfit,false);return {bot,canvas};});
+let yaw=0;
+function draw(){for(const {bot,canvas} of bots){const ctx=canvas.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,220,220);bot.yaw=yaw;bot.draw(ctx,220,220);}}
+document.querySelector('#turn').onclick=()=>{yaw=yaw===0?0.6:yaw===0.6?Math.PI:0;draw();};draw();
+// Compare actual Canvas pixels with the existing individual accessory drawings,
+// including transparent transitions, the rear projection and mailbox fade-out.
+let checks=0;
+for(const R of [10,30,60])for(const headYaw of [0,0.6,Math.PI])for(const presence of [0,0.15,0.5,1])for(const morph of [0,0.4,0.6])for(const pass of [drawOutfitBehind,drawOutfitFront]){
+  const canvases=[document.createElement('canvas'),document.createElement('canvas')];
+  for(const c of canvases)c.width=c.height=360;
+  const contexts=canvases.map(c=>{const x=c.getContext('2d');x.translate(180,180);return x;});
+  const H=makeHead(R,headYaw,0.2,0.1,-0.1),st={presence,morph};
+  pass(contexts[0],'roundGlassesScarf',H,st);
+  pass(contexts[1],'scarf',H,st);pass(contexts[1],'roundGlasses',H,st);
+  const a=contexts[0].getImageData(0,0,360,360).data,b=contexts[1].getImageData(0,0,360,360).data;
+  if(a.some((v,i)=>v!==b[i]))throw Error(`Accessory pixel mismatch: ${R}/${headYaw}/${presence}/${morph}`);
+  checks++;
+}
+window.accessoryChecks={passed:true,cases:checks};document.querySelector('#checks').textContent=`${checks} Canvas rendering cases passed · no new dependencies`;
+</script>
+</html>

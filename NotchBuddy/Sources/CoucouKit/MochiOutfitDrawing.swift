@@ -294,6 +294,16 @@ func drawOutfitFrontStatic(
     roll: CGFloat, morph: CGFloat, isMini: Bool,
     presence: CGFloat = 1, rollTurns: CGFloat = 1
 ) {
+    // Reuse each accessory's own transition and front/behind roll projection.
+    if outfit == .roundGlassesScarf {
+        for accessory in [Outfit.scarf, .roundGlasses] {
+            drawOutfitFrontStatic(context: context, outfit: accessory, H: H,
+                cx: cx, cy: cy, tilt: tilt, sx: sx, sy: sy,
+                roll: roll, morph: morph, isMini: isMini,
+                presence: presence, rollTurns: rollTurns)
+        }
+        return
+    }
     guard !isMini, outfit != .none, outfit != .auto else { return }
     let morphFade = 1 - min(1, max(0, (morph - 0.3) / 0.2))
     guard morphFade > 0.01 else { return }
@@ -431,6 +441,16 @@ func drawOutfitBehindStatic(
     roll: CGFloat, morph: CGFloat, isMini: Bool,
     presence: CGFloat = 1, rollTurns: CGFloat = 1
 ) {
+    // Reuse each accessory's own transition and front/behind roll projection.
+    if outfit == .roundGlassesScarf {
+        for accessory in [Outfit.scarf, .roundGlasses] {
+            drawOutfitBehindStatic(context: context, outfit: accessory, H: H,
+                cx: cx, cy: cy, tilt: tilt, sx: sx, sy: sy,
+                roll: roll, morph: morph, isMini: isMini,
+                presence: presence, rollTurns: rollTurns)
+        }
+        return
+    }
     guard !isMini, outfit != .none, outfit != .auto else { return }
     let morphFade = 1 - min(1, max(0, (morph - 0.3) / 0.2))
     guard morphFade > 0.01 else { return }

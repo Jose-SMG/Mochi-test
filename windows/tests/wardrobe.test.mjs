@@ -87,7 +87,7 @@ test("auto dresses for the season, any other choice is worn as is", () => {
 test("the stored values are the Mac's, in the wardrobe's order", () => {
   assert.deepEqual([...OUTFIT_SELECTIONS], [
     "auto", "none", "partyHat", "beanie", "crown", "sunglasses", "roundGlasses",
-    "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars",
+    "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars", "roundGlassesScarf",
   ]);
   for (const sel of OUTFIT_SELECTIONS) assert.ok(OUTFIT_LABELS[sel], `${sel} has a label`);
 });
@@ -128,4 +128,13 @@ test("the per-frame season lookup follows the calendar day", () => {
   assert.equal(cache.get("auto", new Date(2026, 9, 1, 0, 0, 1)), "witchHat");
   assert.equal(cache.get("bow", day(2026, 10, 1)), "bow");
   assert.equal(cache.get("auto", day(2026, 12, 2)), "santaHat");
+});
+
+
+test("glasses and scarf stay together when saved, previewed or resolved in another season", () => {
+  const saved = JSON.parse(JSON.stringify({ mochiOutfit: "roundGlassesScarf" }));
+  const selection = parseOutfit(saved.mochiOutfit);
+  assert.equal(resolveOutfit(selection, day(2026, 12, 25)), "roundGlassesScarf");
+  assert.equal(wardrobeHeader(selection, "auto", day(2026, 12, 25)), "Round glasses + scarf");
+  assert.equal(OUTFIT_SELECTIONS.length, 14); // Fits the existing single wardrobe row.
 });

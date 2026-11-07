@@ -8,7 +8,7 @@ import { N_, labels, t } from "../i18n/i18n";
 /** Every outfit, plus "auto" (dress for the season) and "none". Order of the wardrobe. */
 export const OUTFIT_SELECTIONS = [
   "auto", "none", "partyHat", "beanie", "crown", "sunglasses", "roundGlasses",
-  "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars",
+  "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars", "roundGlassesScarf",
 ] as const;
 
 /** What can be stored in the preferences. The raw values are the Mac's, keep them stable. */
@@ -36,6 +36,7 @@ export const OUTFIT_KEYS: Record<OutfitSelection, string> = {
   pumpkin: N_("Pumpkin"),
   santaHat: N_("Santa hat"),
   bunnyEars: N_("Bunny ears"),
+  roundGlassesScarf: N_("Round glasses + scarf"),
 };
 
 /** In the current language: every read goes through `t()`. */

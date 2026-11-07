@@ -98,6 +98,11 @@ enum MochiWardrobeTests {
             check("'\(removed)' stored → .auto", Outfit.stored == .auto)
         }
 
+        UserDefaults.standard.set("roundGlassesScarf", forKey: "mochiOutfit")
+        check("combined accessories persist", Outfit.stored == .roundGlassesScarf)
+        check("combination ignores seasonal auto", Outfit.resolved(selection: .roundGlassesScarf, date: d, calendar: cal) == .roundGlassesScarf)
+        check("combination fits the wardrobe row", Outfit.allCases.count == 14)
+
         print("Outfit.stored unknown → auto")
         UserDefaults.standard.set("totallyUnknown", forKey: "mochiOutfit")
         check("unknown → .auto", Outfit.stored == .auto)

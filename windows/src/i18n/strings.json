@@ -8867,6 +8867,21 @@
    "ko": "동그란 안경",
    "ja": "丸メガネ"
   },
+  "Round glasses + scarf": {
+   "zh-Hans": "圆框眼镜 + 围巾",
+   "hi": "गोल चश्मा + मफ़लर",
+   "es": "Gafas redondas + Bufanda",
+   "ar": "نظارة دائرية + وشاح",
+   "fr": "Lunettes rondes + Écharpe",
+   "bn": "গোল চশমা + মাফলার",
+   "pt-BR": "Óculos redondos + Cachecol",
+   "ru": "Круглые очки + Шарф",
+   "id": "Kacamata bulat + Syal",
+   "de": "Runde Brille + Schal",
+   "tr": "Yuvarlak gözlük + Atkı",
+   "ko": "동그란 안경 + 목도리",
+   "ja": "丸メガネ + マフラー"
+  },
   "Rules": {
    "zh-Hans": "规则",
    "hi": "नियम",

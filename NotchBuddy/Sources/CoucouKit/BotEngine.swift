@@ -1372,7 +1372,7 @@ final class BotEngine: ObservableObject {
 
     var outfitFollowsRoll: Bool {
         switch outfit {
-        case .sunglasses, .roundGlasses, .bow, .scarf, .pumpkin: return true
+        case .sunglasses, .roundGlasses, .roundGlassesScarf, .bow, .scarf, .pumpkin: return true
         default: return false
         }
     }

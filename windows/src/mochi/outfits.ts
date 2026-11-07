@@ -1011,6 +1011,11 @@ function layerAlpha(st: OutfitState): number {
  * centre, tilted and squashed exactly like the body).
  */
 export function drawOutfitBehind(ctx: Ctx, outfit: Outfit, H: Head, st: OutfitState) {
+  if (outfit === "roundGlassesScarf") {
+    drawOutfitBehind(ctx, "scarf", H, st);
+    drawOutfitBehind(ctx, "roundGlasses", H, st);
+    return;
+  }
   if (outfit === "none") return;
   const alpha = layerAlpha(st);
   if (alpha <= 0.005) return;
@@ -1036,6 +1041,11 @@ export function drawOutfitBehind(ctx: Ctx, outfit: Outfit, H: Head, st: OutfitSt
 
 /** The parts in front of Mochi, drawn after the body and the eyes. */
 export function drawOutfitFront(ctx: Ctx, outfit: Outfit, H: Head, st: OutfitState) {
+  if (outfit === "roundGlassesScarf") {
+    drawOutfitFront(ctx, "scarf", H, st);
+    drawOutfitFront(ctx, "roundGlasses", H, st);
+    return;
+  }
   if (outfit === "none" || outfit === "bunnyEars") return;
   if (ON_FACE.has(outfit) && faceTurnedAway(H)) return;
   const alpha = layerAlpha(st);

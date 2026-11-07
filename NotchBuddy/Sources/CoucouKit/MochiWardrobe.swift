@@ -2,7 +2,7 @@ import Foundation
 
 enum Outfit: String, CaseIterable {
     case auto, none, partyHat, beanie, crown, sunglasses, roundGlasses,
-         bow, scarf, witchHat, pumpkin, santaHat, bunnyEars
+         bow, scarf, witchHat, pumpkin, santaHat, bunnyEars, roundGlassesScarf
 
     var displayName: String {
         switch self {
@@ -19,6 +19,7 @@ enum Outfit: String, CaseIterable {
         case .pumpkin:      return String(localized: "Pumpkin")
         case .santaHat:     return String(localized: "Santa hat")
         case .bunnyEars:    return String(localized: "Bunny ears")
+        case .roundGlassesScarf: return String(localized: "Round glasses + scarf")
         }
     }
 
