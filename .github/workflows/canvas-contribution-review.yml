@@ -32,6 +32,7 @@ jobs:
             NotchBuddy/Sources/CoucouKit/IslandTypes.swift \
             NotchBuddy/Sources/CoucouKit/MochiWardrobe.swift \
             NotchBuddy/Sources/CoucouKit/BotEngine.swift \
+            NotchBuddy/Sources/CoucouKit/MochiMood.swift \
             NotchBuddy/Sources/CoucouKit/MochiOutfitDrawing.swift \
             /tmp/RenderCanvasCombination.swift -framework AppKit -framework SwiftUI -o /tmp/canvas-combination
           /tmp/canvas-combination
