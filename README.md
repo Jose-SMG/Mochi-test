@@ -2,6 +2,8 @@
 
 # Mochi Studio
 
+**Distribution update:** the previous 0.6 preview is withdrawn because it shares Coucou’s identifiers and data paths. Independent community-preview builds are being prepared. Do not install the old preview over Coucou.
+
 **A room to make your own. A look to keep. A companion for your desktop.**
 
 Community contribution to [Coucou](https://github.com/Louis-CFM/coucou), by Louis Raillé. Preview for macOS and Windows.

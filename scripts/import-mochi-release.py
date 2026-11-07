@@ -13,6 +13,7 @@ parser.add_argument('--input', type=Path, default=root / 'build/import')
 parser.add_argument('--output', type=Path, default=root / 'build/import-ready')
 args = parser.parse_args()
 config = json.loads((root / 'distribution/import.json').read_text())
+assert config.get('retired') is not True, 'Legacy preview distribution has been withdrawn'
 assert config['distribution_permission_confirmed'] is True
 assert config['official_release'] is False
 assert config['source_repository'] == 'Jose-SMG/Pruebas'

@@ -1,8 +1,5 @@
 name: Import verified beta installers
 on:
-  push:
-    branches: [main]
-    paths: ['distribution/import.json', 'scripts/import-mochi-release.py', '.github/workflows/import-beta-release.yml']
   workflow_dispatch:
 permissions:
   contents: read
