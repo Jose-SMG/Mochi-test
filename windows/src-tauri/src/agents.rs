@@ -1084,7 +1084,7 @@ mod tests {
         let w = windows(WIN);
         assert_eq!(
             w.command(Shell::Sh, "Stop"),
-            "\"C:/Users/me/AppData/Local/Coucou/bin/mochi-studio-preview-hook.exe\" Stop"
+            "\"C:/Users/me/AppData/Local/MochiStudioPreview/bin/mochi-studio-preview-hook.exe\" Stop"
         );
         assert_eq!(
             w.command(Shell::PowerShell, "--agent gemini Stop"),
@@ -1282,7 +1282,7 @@ mod tests {
         assert_eq!(entry["powershell"], format!("& '{WIN}' --agent copilot preToolUse"));
         assert_eq!(
             entry["bash"],
-            "\"C:/Users/me/AppData/Local/Coucou/bin/mochi-studio-preview-hook.exe\" --agent copilot preToolUse"
+            "\"C:/Users/me/AppData/Local/MochiStudioPreview/bin/mochi-studio-preview-hook.exe\" --agent copilot preToolUse"
         );
     }
 
