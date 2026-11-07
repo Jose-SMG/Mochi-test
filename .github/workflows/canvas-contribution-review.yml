@@ -24,6 +24,7 @@ jobs:
           source=Path('scripts/RenderOutfits.swift').read_text()
           for name in ['targetOutfits','rollOutfits','transitionOutfits']:
               source=re.sub(r'private let '+name+r': \[Outfit\] = \[[^\]]*\]', 'private let '+name+': [Outfit] = [.roundGlasses, .scarf, .roundGlassesScarf]', source)
+          source += '\nenum PillCatalog { static func basePillId(_ id: String) -> String { id } }\n'
           Path('/tmp/RenderCanvasCombination.swift').write_text(source)
           PY
           swiftc -parse-as-library -sdk "$(xcrun --sdk macosx --show-sdk-path)" \

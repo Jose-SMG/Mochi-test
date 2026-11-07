@@ -1,0 +1,382 @@
+From 245f21a1d1ba7d54ad155a19fb0838d6533a9530 Mon Sep 17 00:00:00 2001
+From: adrijosesanmiguel <adrijosesanmiguel@gmail.com>
+Date: Sat, 7 Nov 2026 13:23:25 +0000
+Subject: [PATCH] Add a glasses and scarf combination using the existing Canvas
+ accessories
+
+---
+ NotchBuddy/Resources/Localizable.xcstrings    | 100 ++++++++++++++++++
+ NotchBuddy/Sources/CoucouKit/BotEngine.swift  |   2 +-
+ .../CoucouKit/MochiOutfitDrawing.swift        |  20 ++++
+ .../Sources/CoucouKit/MochiWardrobe.swift     |   3 +-
+ tests/MochiWardrobeTests.swift                |   5 +
+ windows/dev/accessory-combination.html        |  36 +++++++
+ windows/src-tauri/src/phone_link/hub.rs       |   4 +-
+ windows/src/i18n/strings.json                 |  15 +++
+ windows/src/mochi/outfits.ts                  |  10 ++
+ windows/src/mochi/wardrobe.ts                 |   3 +-
+ windows/tests/wardrobe.test.mjs               |  11 +-
+ 11 files changed, 203 insertions(+), 6 deletions(-)
+ create mode 100644 windows/dev/accessory-combination.html
+
+diff --git a/NotchBuddy/Resources/Localizable.xcstrings b/NotchBuddy/Resources/Localizable.xcstrings
+index abc19c7..4d30622 100644
+--- a/NotchBuddy/Resources/Localizable.xcstrings
++++ b/NotchBuddy/Resources/Localizable.xcstrings
+@@ -1,6 +1,106 @@
+ {
+   "sourceLanguage" : "en",
+   "strings" : {
++    "Round glasses + scarf": {
++      "localizations": {
++        "ar": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "نظارة دائرية + وشاح"
++          }
++        },
++        "bn": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "গোল চশমা + মাফলার"
++          }
++        },
++        "de": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Runde Brille + Schal"
++          }
++        },
++        "en": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Round glasses + scarf"
++          }
++        },
++        "es": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Gafas redondas + Bufanda"
++          }
++        },
++        "fr": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Lunettes rondes + Écharpe"
++          }
++        },
++        "hi": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "गोल चश्मा + मफ़लर"
++          }
++        },
++        "id": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Kacamata bulat + Syal"
++          }
++        },
++        "ja": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "丸メガネ + マフラー"
++          }
++        },
++        "ko": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "동그란 안경 + 목도리"
++          }
++        },
++        "pt-BR": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Óculos redondos + Cachecol"
++          }
++        },
++        "ru": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Круглые очки + Шарф"
++          }
++        },
++        "th": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "แว่นกลม + ผ้าพันคอ"
++          }
++        },
++        "tr": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "Yuvarlak gözlük + Atkı"
++          }
++        },
++        "zh-Hans": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "圆框眼镜 + 围巾"
++          }
++        },
++        "zh-Hant": {
++          "stringUnit": {
++            "state": "translated",
++            "value": "圓框眼鏡 + 圍巾"
++          }
++        }
++      }
++    },
+     "coucoudoro.hint" : {
+       "localizations" : {
+         "ar" : {
+diff --git a/NotchBuddy/Sources/CoucouKit/BotEngine.swift b/NotchBuddy/Sources/CoucouKit/BotEngine.swift
+index fd710cc..57b7e73 100644
+--- a/NotchBuddy/Sources/CoucouKit/BotEngine.swift
++++ b/NotchBuddy/Sources/CoucouKit/BotEngine.swift
+@@ -1372,7 +1372,7 @@ final class BotEngine: ObservableObject {
+ 
+     var outfitFollowsRoll: Bool {
+         switch outfit {
+-        case .sunglasses, .roundGlasses, .bow, .scarf, .pumpkin: return true
++        case .sunglasses, .roundGlasses, .roundGlassesScarf, .bow, .scarf, .pumpkin: return true
+         default: return false
+         }
+     }
+diff --git a/NotchBuddy/Sources/CoucouKit/MochiOutfitDrawing.swift b/NotchBuddy/Sources/CoucouKit/MochiOutfitDrawing.swift
+index 3da2227..3c4f5b3 100644
+--- a/NotchBuddy/Sources/CoucouKit/MochiOutfitDrawing.swift
++++ b/NotchBuddy/Sources/CoucouKit/MochiOutfitDrawing.swift
+@@ -294,6 +294,16 @@ func drawOutfitFrontStatic(
+     roll: CGFloat, morph: CGFloat, isMini: Bool,
+     presence: CGFloat = 1, rollTurns: CGFloat = 1
+ ) {
++    // Reuse each accessory's own transition and front/behind roll projection.
++    if outfit == .roundGlassesScarf {
++        for accessory in [Outfit.scarf, .roundGlasses] {
++            drawOutfitFrontStatic(context: context, outfit: accessory, H: H,
++                cx: cx, cy: cy, tilt: tilt, sx: sx, sy: sy,
++                roll: roll, morph: morph, isMini: isMini,
++                presence: presence, rollTurns: rollTurns)
++        }
++        return
++    }
+     guard !isMini, outfit != .none, outfit != .auto else { return }
+     let morphFade = 1 - min(1, max(0, (morph - 0.3) / 0.2))
+     guard morphFade > 0.01 else { return }
+@@ -431,6 +441,16 @@ func drawOutfitBehindStatic(
+     roll: CGFloat, morph: CGFloat, isMini: Bool,
+     presence: CGFloat = 1, rollTurns: CGFloat = 1
+ ) {
++    // Reuse each accessory's own transition and front/behind roll projection.
++    if outfit == .roundGlassesScarf {
++        for accessory in [Outfit.scarf, .roundGlasses] {
++            drawOutfitBehindStatic(context: context, outfit: accessory, H: H,
++                cx: cx, cy: cy, tilt: tilt, sx: sx, sy: sy,
++                roll: roll, morph: morph, isMini: isMini,
++                presence: presence, rollTurns: rollTurns)
++        }
++        return
++    }
+     guard !isMini, outfit != .none, outfit != .auto else { return }
+     let morphFade = 1 - min(1, max(0, (morph - 0.3) / 0.2))
+     guard morphFade > 0.01 else { return }
+diff --git a/NotchBuddy/Sources/CoucouKit/MochiWardrobe.swift b/NotchBuddy/Sources/CoucouKit/MochiWardrobe.swift
+index 137468e..977e533 100644
+--- a/NotchBuddy/Sources/CoucouKit/MochiWardrobe.swift
++++ b/NotchBuddy/Sources/CoucouKit/MochiWardrobe.swift
+@@ -2,7 +2,7 @@ import Foundation
+ 
+ enum Outfit: String, CaseIterable {
+     case auto, none, partyHat, beanie, crown, sunglasses, roundGlasses,
+-         bow, scarf, witchHat, pumpkin, santaHat, bunnyEars
++         bow, scarf, witchHat, pumpkin, santaHat, bunnyEars, roundGlassesScarf
+ 
+     var displayName: String {
+         switch self {
+@@ -19,6 +19,7 @@ enum Outfit: String, CaseIterable {
+         case .pumpkin:      return String(localized: "Pumpkin")
+         case .santaHat:     return String(localized: "Santa hat")
+         case .bunnyEars:    return String(localized: "Bunny ears")
++        case .roundGlassesScarf: return String(localized: "Round glasses + scarf")
+         }
+     }
+ 
+diff --git a/tests/MochiWardrobeTests.swift b/tests/MochiWardrobeTests.swift
+index 2cdf5d7..bde784d 100644
+--- a/tests/MochiWardrobeTests.swift
++++ b/tests/MochiWardrobeTests.swift
+@@ -98,6 +98,11 @@ enum MochiWardrobeTests {
+             check("'\(removed)' stored → .auto", Outfit.stored == .auto)
+         }
+ 
++        UserDefaults.standard.set("roundGlassesScarf", forKey: "mochiOutfit")
++        check("combined accessories persist", Outfit.stored == .roundGlassesScarf)
++        check("combination ignores seasonal auto", Outfit.resolved(selection: .roundGlassesScarf, date: d, calendar: cal) == .roundGlassesScarf)
++        check("combination fits the wardrobe row", Outfit.allCases.count == 14)
++
+         print("Outfit.stored unknown → auto")
+         UserDefaults.standard.set("totallyUnknown", forKey: "mochiOutfit")
+         check("unknown → .auto", Outfit.stored == .auto)
+diff --git a/windows/dev/accessory-combination.html b/windows/dev/accessory-combination.html
+new file mode 100644
+index 0000000..7934910
+--- /dev/null
++++ b/windows/dev/accessory-combination.html
+@@ -0,0 +1,36 @@
++<!doctype html>
++<html lang="en">
++<meta charset="utf-8">
++<title>Mochi · glasses + scarf</title>
++<style>
++:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#15171c;color:#eceef3}body{max-width:900px;margin:56px auto;padding:0 24px}h1{font-size:28px;font-weight:600;margin-bottom:8px}p{color:#a6aab6}main{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}article{background:#1d2027;border:1px solid #30343e;border-radius:18px;text-align:center;padding:20px}canvas{width:220px;height:220px;max-width:100%}label{display:block;font-size:14px;margin-bottom:8px}button{border:1px solid #515968;border-radius:8px;background:#303747;color:inherit;padding:10px 14px;cursor:pointer}#checks{font:12px ui-monospace,monospace;margin-top:28px}
++</style>
++<h1>Glasses + scarf</h1>
++<p>One wardrobe choice. Both existing accessories, drawn together on Mochi's Canvas.</p>
++<main></main>
++<p><button id="turn">Turn Mochi</button></p><div id="checks"></div>
++<script type="module">
++import { BotEngine } from '../src/mochi/engine.ts';
++import { drawOutfitBehind, drawOutfitFront, makeHead } from '../src/mochi/outfits.ts';
++const choices=[['roundGlasses','Round glasses'],['scarf','Scarf'],['roundGlassesScarf','Round glasses + scarf']];
++const bots=choices.map(([outfit,title])=>{const card=document.createElement('article'),label=document.createElement('label'),canvas=document.createElement('canvas');label.textContent=title;canvas.width=canvas.height=440;card.append(canvas,label);document.querySelector('main').append(card);const bot=new BotEngine();bot.setOutfit(outfit,false);return {bot,canvas};});
++let yaw=0;
++function draw(){for(const {bot,canvas} of bots){const ctx=canvas.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,220,220);bot.yaw=yaw;bot.draw(ctx,220,220);}}
++document.querySelector('#turn').onclick=()=>{yaw=yaw===0?0.6:yaw===0.6?Math.PI:0;draw();};draw();
++// Compare actual Canvas pixels with the existing individual accessory drawings,
++// including transparent transitions, the rear projection and mailbox fade-out.
++let checks=0;
++for(const R of [10,30,60])for(const headYaw of [0,0.6,Math.PI])for(const presence of [0,0.15,0.5,1])for(const morph of [0,0.4,0.6])for(const pass of [drawOutfitBehind,drawOutfitFront]){
++  const canvases=[document.createElement('canvas'),document.createElement('canvas')];
++  for(const c of canvases)c.width=c.height=360;
++  const contexts=canvases.map(c=>{const x=c.getContext('2d');x.translate(180,180);return x;});
++  const H=makeHead(R,headYaw,0.2,0.1,-0.1),st={presence,morph};
++  pass(contexts[0],'roundGlassesScarf',H,st);
++  pass(contexts[1],'scarf',H,st);pass(contexts[1],'roundGlasses',H,st);
++  const a=contexts[0].getImageData(0,0,360,360).data,b=contexts[1].getImageData(0,0,360,360).data;
++  if(a.some((v,i)=>v!==b[i]))throw Error(`Accessory pixel mismatch: ${R}/${headYaw}/${presence}/${morph}`);
++  checks++;
++}
++window.accessoryChecks={passed:true,cases:checks};document.querySelector('#checks').textContent=`${checks} Canvas rendering cases passed · no new dependencies`;
++</script>
++</html>
+diff --git a/windows/src-tauri/src/phone_link/hub.rs b/windows/src-tauri/src/phone_link/hub.rs
+index d5f91a0..a4f4ad6 100644
+--- a/windows/src-tauri/src/phone_link/hub.rs
++++ b/windows/src-tauri/src/phone_link/hub.rs
+@@ -162,9 +162,9 @@ pub struct ApprovalIn {
+ 
+ /// The values the island stores for Mochi's wardrobe ("auto" follows the seasons on the phone's own calendar).
+ /// Same raw values as the Mac and the PC; anything else is not sent.
+-pub const OUTFIT_CHOICES: [&str; 13] = [
++pub const OUTFIT_CHOICES: [&str; 14] = [
+     "auto", "none", "partyHat", "beanie", "crown", "sunglasses", "roundGlasses",
+-    "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars",
++    "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars", "roundGlassesScarf",
+ ];
+ 
+ fn clean_services(cards: Vec<ServiceIn>) -> Vec<ServiceIn> {
+diff --git a/windows/src/i18n/strings.json b/windows/src/i18n/strings.json
+index a8510f4..aacf5a1 100644
+--- a/windows/src/i18n/strings.json
++++ b/windows/src/i18n/strings.json
+@@ -8867,6 +8867,21 @@
+    "ko": "동그란 안경",
+    "ja": "丸メガネ"
+   },
++  "Round glasses + scarf": {
++   "zh-Hans": "圆框眼镜 + 围巾",
++   "hi": "गोल चश्मा + मफ़लर",
++   "es": "Gafas redondas + Bufanda",
++   "ar": "نظارة دائرية + وشاح",
++   "fr": "Lunettes rondes + Écharpe",
++   "bn": "গোল চশমা + মাফলার",
++   "pt-BR": "Óculos redondos + Cachecol",
++   "ru": "Круглые очки + Шарф",
++   "id": "Kacamata bulat + Syal",
++   "de": "Runde Brille + Schal",
++   "tr": "Yuvarlak gözlük + Atkı",
++   "ko": "동그란 안경 + 목도리",
++   "ja": "丸メガネ + マフラー"
++  },
+   "Rules": {
+    "zh-Hans": "规则",
+    "hi": "नियम",
+diff --git a/windows/src/mochi/outfits.ts b/windows/src/mochi/outfits.ts
+index 87acf97..22fc8aa 100644
+--- a/windows/src/mochi/outfits.ts
++++ b/windows/src/mochi/outfits.ts
+@@ -1011,6 +1011,11 @@ function layerAlpha(st: OutfitState): number {
+  * centre, tilted and squashed exactly like the body).
+  */
+ export function drawOutfitBehind(ctx: Ctx, outfit: Outfit, H: Head, st: OutfitState) {
++  if (outfit === "roundGlassesScarf") {
++    drawOutfitBehind(ctx, "scarf", H, st);
++    drawOutfitBehind(ctx, "roundGlasses", H, st);
++    return;
++  }
+   if (outfit === "none") return;
+   const alpha = layerAlpha(st);
+   if (alpha <= 0.005) return;
+@@ -1036,6 +1041,11 @@ export function drawOutfitBehind(ctx: Ctx, outfit: Outfit, H: Head, st: OutfitSt
+ 
+ /** The parts in front of Mochi, drawn after the body and the eyes. */
+ export function drawOutfitFront(ctx: Ctx, outfit: Outfit, H: Head, st: OutfitState) {
++  if (outfit === "roundGlassesScarf") {
++    drawOutfitFront(ctx, "scarf", H, st);
++    drawOutfitFront(ctx, "roundGlasses", H, st);
++    return;
++  }
+   if (outfit === "none" || outfit === "bunnyEars") return;
+   if (ON_FACE.has(outfit) && faceTurnedAway(H)) return;
+   const alpha = layerAlpha(st);
+diff --git a/windows/src/mochi/wardrobe.ts b/windows/src/mochi/wardrobe.ts
+index 28f1923..cb349f5 100644
+--- a/windows/src/mochi/wardrobe.ts
++++ b/windows/src/mochi/wardrobe.ts
+@@ -8,7 +8,7 @@ import { N_, labels, t } from "../i18n/i18n";
+ /** Every outfit, plus "auto" (dress for the season) and "none". Order of the wardrobe. */
+ export const OUTFIT_SELECTIONS = [
+   "auto", "none", "partyHat", "beanie", "crown", "sunglasses", "roundGlasses",
+-  "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars",
++  "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars", "roundGlassesScarf",
+ ] as const;
+ 
+ /** What can be stored in the preferences. The raw values are the Mac's, keep them stable. */
+@@ -36,6 +36,7 @@ export const OUTFIT_KEYS: Record<OutfitSelection, string> = {
+   pumpkin: N_("Pumpkin"),
+   santaHat: N_("Santa hat"),
+   bunnyEars: N_("Bunny ears"),
++  roundGlassesScarf: N_("Round glasses + scarf"),
+ };
+ 
+ /** In the current language: every read goes through `t()`. */
+diff --git a/windows/tests/wardrobe.test.mjs b/windows/tests/wardrobe.test.mjs
+index f6310d9..3e8a721 100644
+--- a/windows/tests/wardrobe.test.mjs
++++ b/windows/tests/wardrobe.test.mjs
+@@ -87,7 +87,7 @@ test("auto dresses for the season, any other choice is worn as is", () => {
+ test("the stored values are the Mac's, in the wardrobe's order", () => {
+   assert.deepEqual([...OUTFIT_SELECTIONS], [
+     "auto", "none", "partyHat", "beanie", "crown", "sunglasses", "roundGlasses",
+-    "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars",
++    "bow", "scarf", "witchHat", "pumpkin", "santaHat", "bunnyEars", "roundGlassesScarf",
+   ]);
+   for (const sel of OUTFIT_SELECTIONS) assert.ok(OUTFIT_LABELS[sel], `${sel} has a label`);
+ });
+@@ -129,3 +129,12 @@ test("the per-frame season lookup follows the calendar day", () => {
+   assert.equal(cache.get("bow", day(2026, 10, 1)), "bow");
+   assert.equal(cache.get("auto", day(2026, 12, 2)), "santaHat");
+ });
++
++
++test("glasses and scarf stay together when saved, previewed or resolved in another season", () => {
++  const saved = JSON.parse(JSON.stringify({ mochiOutfit: "roundGlassesScarf" }));
++  const selection = parseOutfit(saved.mochiOutfit);
++  assert.equal(resolveOutfit(selection, day(2026, 12, 25)), "roundGlassesScarf");
++  assert.equal(wardrobeHeader(selection, "auto", day(2026, 12, 25)), "Round glasses + scarf");
++  assert.equal(OUTFIT_SELECTIONS.length, 14); // Fits the existing single wardrobe row.
++});
+-- 
+2.52.0
+
