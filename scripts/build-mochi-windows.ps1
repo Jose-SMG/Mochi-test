@@ -13,6 +13,8 @@ function Invoke-Native {
 Push-Location $Root
 try {
     New-Item -ItemType Directory -Path $OutDir -Force | Out-Null
+    Invoke-Native -File node -Arguments @('scripts/check-preview-identity.mjs')
+    Get-ChildItem $OutDir -File | Where-Object { $_.Extension -in '.exe','.msi','.zip' } | Remove-Item -Force
     Invoke-Native -File node -Arguments @('--test', 'tests/mochi-scene.test.mjs', 'tests/mochi-studio.test.mjs')
     Push-Location (Join-Path $Root 'windows')
     try {
@@ -23,8 +25,8 @@ try {
         Invoke-Native -File cargo -Arguments @('build', '--release', '--locked', '-p', 'coucou-hook')
         Invoke-Native -File cargo -Arguments @('test', '--release', '--workspace', '--locked')
         $TauriArgs = @('tauri', 'build', '--bundles', 'nsis,msi')
-        if ($env:COUCOU_WINDOWS_CERT_THUMBPRINT) {
-            $Thumbprint = $env:COUCOU_WINDOWS_CERT_THUMBPRINT.Replace(' ', '')
+        if ($env:MOCHI_WINDOWS_CERT_THUMBPRINT) {
+            $Thumbprint = $env:MOCHI_WINDOWS_CERT_THUMBPRINT.Replace(' ', '')
             if ($Thumbprint -notmatch '^[A-Fa-f0-9]{40}$' -or -not (Test-Path "Cert:\CurrentUser\My\$Thumbprint")) { throw 'The requested signing certificate is not installed in CurrentUser/My.' }
             $SignConfig = Join-Path $OutDir 'tauri-signing.json'
             @{bundle = @{windows = @{certificateThumbprint = $Thumbprint; digestAlgorithm = 'sha256'; timestampUrl = 'https://timestamp.digicert.com'; tsp = $true}}} | ConvertTo-Json -Depth 5 | Set-Content $SignConfig
@@ -38,20 +40,21 @@ try {
             $Suffix = if ($Kind -eq 'nsis') { '*-setup.exe' } else { '*.msi' }
             $Files = @(Get-ChildItem -Path "target/release/bundle/$Kind/$Suffix" -File)
             if ($Files.Count -ne 1) { throw "Expected exactly one $Kind installer, got $($Files.Count)" }
-            $Name = if ($Kind -eq 'nsis') { "Coucou-Mochi-$Version-Windows-x64-setup.exe" } else { "Coucou-Mochi-$Version-Windows-x64.msi" }
+            $Name = if ($Kind -eq 'nsis') { "Mochi-Studio-Preview-$Version-Windows-x64-setup.exe" } else { "Mochi-Studio-Preview-$Version-Windows-x64.msi" }
             Copy-Item -LiteralPath $Files[0].FullName -Destination (Join-Path $OutDir $Name) -Force
         }
         # A portable pair is useful for checking the app without installing it.
         $Portable = Join-Path $OutDir 'portable'
+        if (Test-Path $Portable) { Remove-Item $Portable -Recurse -Force }
         New-Item -ItemType Directory -Path $Portable -Force | Out-Null
-        Copy-Item target/release/coucou.exe,target/release/coucou-hook.exe -Destination $Portable -Force
+        Copy-Item target/release/mochi-studio-preview.exe,target/release/mochi-studio-preview-hook.exe -Destination $Portable -Force
         Get-ChildItem target/release/*.dll -ErrorAction SilentlyContinue | Copy-Item -Destination $Portable -Force
-        Compress-Archive -Path "$Portable/*" -DestinationPath (Join-Path $OutDir "Coucou-Mochi-$Version-Windows-x64-portable.zip") -Force
+        Compress-Archive -Path "$Portable/*" -DestinationPath (Join-Path $OutDir "Mochi-Studio-Preview-$Version-Windows-x64-portable.zip") -Force
     } finally { Pop-Location }
     $SignatureStatus = 'unsigned'
-    if ($env:COUCOU_WINDOWS_CERT_THUMBPRINT) {
+    if ($env:MOCHI_WINDOWS_CERT_THUMBPRINT) {
         $ToVerify = @(Get-ChildItem $OutDir -File | Where-Object { $_.Extension -in '.exe', '.msi' })
-        $ToVerify += Get-Item (Join-Path $Root 'windows/target/release/coucou.exe')
+        $ToVerify += Get-Item (Join-Path $Root 'windows/target/release/mochi-studio-preview.exe')
         foreach ($File in $ToVerify) {
             $Signature = Get-AuthenticodeSignature $File.FullName
             if ($Signature.Status -ne 'Valid') { throw "Signature validation failed for $($File.Name): $($Signature.Status)" }

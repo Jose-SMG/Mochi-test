@@ -1,223 +1,115 @@
-name: Coucou Mochi installers
+name: Mochi Studio Preview installers
 
 on:
+  push:
+    branches: [main]
+    paths: ['NotchBuddy/**', 'windows/**', 'shared/**', 'tests/**', 'scripts/**', 'mochi-preview.json', '.github/workflows/mochi-installers.yml']
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: mochi-installers-${{ github.ref }}-${{ github.sha }}
-  cancel-in-progress: true
+  group: mochi-preview-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  window-selection:
-    name: Native Windows automatic edge attachment
-    runs-on: windows-latest
-    timeout-minutes: 10
+  identity:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Test real inactive, covered, minimized and closed windows
-        run: cargo test --manifest-path tests/window-perch-native/Cargo.toml --locked -- --test-threads=1
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - run: node scripts/check-preview-identity.mjs
+      - run: python3 scripts/test-whats-new.py
+      - run: rustc --test windows/preview-identity.rs -o /tmp/preview-policy && /tmp/preview-policy
+  window-selection:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - run: cargo test --manifest-path tests/window-perch-native/Cargo.toml --locked -- --test-threads=1
   macos:
-    name: macOS universal DMG
+    name: Build independent universal macOS DMG
+    needs: identity
     runs-on: macos-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+        with: {persist-credentials: false}
       - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - uses: actions/cache/restore@v4
-        id: xcode-cache
+        with: {node-version: 24}
+      - uses: actions/cache@v4
         with:
           path: build/mochi-xcode
-          key: mochi-xcode-${{ hashFiles('NotchBuddy/project.yml') }}-${{ github.sha }}
-          restore-keys: |
-            mochi-xcode-${{ hashFiles('NotchBuddy/project.yml') }}-
-            mochi-xcode-
+          key: mochi-preview-xcode-${{ hashFiles('NotchBuddy/project.yml') }}-${{ github.sha }}
+          restore-keys: mochi-preview-xcode-
       - run: brew install xcodegen
-      - name: Build and verify DMG
-        run: bash scripts/build-mochi-macos.sh
-      - name: Keep native Mac build cache
-        if: ${{ always() && steps.xcode-cache.outputs.cache-hit != 'true' }}
-        uses: actions/cache/save@v4
-        with:
-          path: build/mochi-xcode
-          key: ${{ steps.xcode-cache.outputs.cache-primary-key }}
+      - run: bash scripts/build-mochi-macos.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: Coucou-Mochi-macOS-universal
+          name: Mochi-Studio-Preview-macOS
           path: build/mochi-installers/macos/*
           if-no-files-found: error
-          retention-days: 30
   windows:
-    name: Windows x64 EXE and MSI
-    needs: window-selection
+    name: Build independent Windows EXE and MSI
+    needs: [identity, window-selection]
     runs-on: windows-latest
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+        with: {persist-credentials: false}
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: windows/package-lock.json
-      - uses: actions/cache/restore@v4
-        id: cargo-cache
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
             windows/target
-          key: mochi-installers-windows-${{ hashFiles('windows/Cargo.lock') }}-${{ github.sha }}
+          key: mochi-preview-windows-${{ hashFiles('windows/Cargo.lock') }}-${{ github.sha }}
           restore-keys: |
+            mochi-preview-windows-${{ hashFiles('windows/Cargo.lock') }}-
             mochi-installers-windows-${{ hashFiles('windows/Cargo.lock') }}-
-            mochi-installers-windows-${{ hashFiles('windows/Cargo.lock') }}
             mochi-installers-windows-
-      - name: Build and verify EXE and MSI
-        shell: pwsh
+      - shell: pwsh
         run: ./scripts/build-mochi-windows.ps1
-      - name: Keep native build cache
-        if: ${{ always() && steps.cargo-cache.outputs.cache-hit != 'true' }}
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            windows/target
-          key: ${{ steps.cargo-cache.outputs.cache-primary-key }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Coucou-Mochi-Windows-x64
-          path: |
-            build/mochi-installers/windows/*.exe
-            build/mochi-installers/windows/*.msi
-            build/mochi-installers/windows/*.zip
-            build/mochi-installers/windows/*.json
-            build/mochi-installers/windows/*.txt
-          if-no-files-found: error
-          retention-days: 30
-  windows-runtime:
-    name: Actual Windows app, lifecycle, grip and resource measurements
-    needs: windows
-    runs-on: windows-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-      actions: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - uses: actions/download-artifact@v4
-        with:
-          name: Coucou-Mochi-Windows-x64
-          path: build/native-input
-      - name: Install the actual beta and verify its dependencies
+      - name: Install, launch and uninstall without touching official Coucou
         shell: pwsh
         run: |
-          $Target = Join-Path $env:RUNNER_TEMP 'Coucou-beta-installed'
-          $Installer = Get-ChildItem build/native-input/*setup.exe
-          $Process = Start-Process $Installer.FullName -ArgumentList @('/S', "/D=$Target") -Wait -PassThru
-          Write-Host "Installer exit: $($Process.ExitCode)"
-          if ($Process.ExitCode -ne 0) { throw 'Beta installation failed' }
-          Get-Process coucou -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "$Target*" } | Stop-Process -Force
-          $Roots = @($Target, (Join-Path $env:LOCALAPPDATA 'Coucou'), (Join-Path $env:LOCALAPPDATA 'Programs/Coucou'))
-          $Entries = Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like 'Coucou*' }
-          $Entries | Select-Object DisplayName, DisplayVersion, InstallLocation | Format-Table
-          foreach ($Entry in $Entries) { if ($Entry.InstallLocation) { $Roots += $Entry.InstallLocation } }
-          $Executables = @($Roots | Select-Object -Unique | Where-Object { Test-Path $_ } | ForEach-Object { Get-ChildItem $_ -Filter coucou.exe -File -Recurse -ErrorAction SilentlyContinue })
-          if (-not $Executables.Count) {
-            New-Item -ItemType Directory build/mochi-native-qa/windows -Force | Out-Null
-            & ./scripts/qa-windows-desktop.ps1 -Action capture -Out build/mochi-native-qa/windows/installer-failure.png
-            @{passed=$false;stage='installer';target=$Target;exitCode=$Process.ExitCode} | ConvertTo-Json | Set-Content build/mochi-native-qa/windows/native-validation.json
-            Get-ChildItem $Target -Recurse -ErrorAction SilentlyContinue | Select-Object Name,Length
-            throw 'Installed app executable is missing'
-          }
-          $Executable = $Executables[0].FullName
-          Write-Host "Installed executable: $Executable"
-          Write-Output "COUCOU_QA_EXE=$Executable" >> $env:GITHUB_ENV
-          Write-Host 'WebView2 installations:'
-          Get-ChildItem "${env:ProgramFiles(x86)}/Microsoft/EdgeWebView/Application", "$env:LOCALAPPDATA/Microsoft/EdgeWebView/Application" -Directory -ErrorAction SilentlyContinue | Select-Object Name
-      - name: Exercise the installed native app
-        shell: pwsh
-        run: |
-          node scripts/qa-mochi-native-ui.cjs
-          if ($LASTEXITCODE -ne 0) { throw 'Native application QA failed' }
+          $Installer = Get-ChildItem 'build/mochi-installers/windows/*-setup.exe'
+          ./scripts/qa-preview-coexistence.ps1 -Installer $Installer.FullName
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Mochi-native-Windows-QA
+          name: Mochi-Studio-Preview-Windows
           path: |
-            build/mochi-native-qa/windows/*.json
-            build/mochi-native-qa/windows/*.png
-            build/mochi-native-qa/windows/native-frames/*.png
-            build/mochi-native-qa/windows/native-frames/timing.json
+            build/mochi-installers/windows/*.*
+            build/coexistence/*.json
           if-no-files-found: error
-          retention-days: 30
-  installers:
-    name: Both installer builds required
-    if: ${{ always() }}
-    needs: [macos, windows, windows-runtime, native-media]
+  publish:
+    name: Publish only verified builds of this exact source
+    needs: [identity, macos, windows]
+    if: github.repository == 'Jose-SMG/Mochi-test' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    steps:
-      - name: Require both platforms
-        env:
-          MACOS_RESULT: ${{ needs.macos.result }}
-          WINDOWS_RESULT: ${{ needs.windows.result }}
-          RUNTIME_RESULT: ${{ needs.windows-runtime.result }}
-          MEDIA_RESULT: ${{ needs.native-media.result }}
-        run: test "$MACOS_RESULT" = success && test "$WINDOWS_RESULT" = success && test "$RUNTIME_RESULT" = success && test "$MEDIA_RESULT" = success
-  native-media:
-    needs: windows-runtime
-    if: always() && needs.windows-runtime.result != 'cancelled'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
+    permissions: {contents: write}
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+        with: {persist-credentials: false, fetch-depth: 0}
       - uses: actions/download-artifact@v4
         with:
-          name: Mochi-native-Windows-QA
-          path: build/native-media
-      - name: Retain successful native presentation evidence
+          pattern: Mochi-Studio-Preview-*
+          path: build/release-input
+      - name: Verify hashes, identities, source and native coexistence
+        run: python3 scripts/verify-preview-release.py build/release-input build/release
+      - name: Publish independent community prerelease
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          MEDIA="$RUNNER_TEMP/mochi-media"
-          mkdir -p "$MEDIA"
-          git -C "$MEDIA" init
-          git -C "$MEDIA" remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
-          if git ls-remote --exit-code --heads "https://github.com/$GITHUB_REPOSITORY.git" media/mochi-studio-beta1; then
-            git -C "$MEDIA" fetch --depth=1 origin media/mochi-studio-beta1
-            git -C "$MEDIA" checkout -b media/mochi-studio-beta1 FETCH_HEAD
-          else
-            git -C "$MEDIA" checkout --orphan media/mochi-studio-beta1
-          fi
-          mkdir -p "$MEDIA/windows/$GITHUB_RUN_ID"
-          cp -R build/native-media/. "$MEDIA/windows/$GITHUB_RUN_ID/"
-          export MEDIA
-          python3 - <<'PY'
-          import json, os
-          from pathlib import Path
-          proof=json.loads(Path('build/native-media/native-validation.json').read_text())
-          Path(os.environ['MEDIA'],'latest.json').write_text(json.dumps({'run_id':int(os.environ['GITHUB_RUN_ID']),'source_commit':proof['source_commit'],'path':'windows/'+os.environ['GITHUB_RUN_ID'],'passed':proof.get('passed') is True})+'\n')
-          PY
-          git -C "$MEDIA" config user.name 'github-actions[bot]'
-          git -C "$MEDIA" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git -C "$MEDIA" add .
-          git -C "$MEDIA" commit -m "Retain native Windows beta evidence $GITHUB_RUN_ID"
-          git -C "$MEDIA" -c 'credential.helper=!gh auth git-credential' push origin HEAD:refs/heads/media/mochi-studio-beta1
+          TAG=$(node -p 'require("./mochi-preview.json").tag')
+          test "$(git rev-list -n 1 "$TAG")" = "$GITHUB_SHA"
+          gh release create "$TAG" --verify-tag --prerelease --title 'Mochi Studio Preview 0.1.0 beta 1' --notes-file distribution/PREVIEW-RELEASE.md build/release/*

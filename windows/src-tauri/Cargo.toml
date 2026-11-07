@@ -1,10 +1,15 @@
 [package]
 name = "coucou"
+default-run = "mochi-studio-preview"
 description = "Coucou for Windows and Linux — Mochi lives at the top of your screen"
 authors = ["Louis Raille"]
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+
+[[bin]]
+name = "mochi-studio-preview"
+path = "src/main.rs"
 
 [lib]
 name = "coucou_lib"

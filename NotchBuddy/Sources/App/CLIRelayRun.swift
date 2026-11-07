@@ -126,7 +126,7 @@ extension CLIRelay {
     static func ask(_ cli: SubscriptionCLI, _ request: CLIRequest) async throws -> String {
         guard let exe = CLILocator.shared.path(cli) else { throw CLIFailure.notInstalled(cli.displayName) }
         let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        let workdir = support.appendingPathComponent("NotchBuddy/relay", isDirectory: true)
+        let workdir = support.appendingPathComponent("MochiStudioPreview/relay", isDirectory: true)
         return try await ask(cli, request, exe: exe, workdir: workdir)
     }
 

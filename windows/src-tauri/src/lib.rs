@@ -1,5 +1,9 @@
 // Coucou for Windows — app wiring and the commands the island calls.
 
+#[allow(dead_code)]
+#[path = "../../preview-identity.rs"]
+mod preview_identity;
+
 mod agent_hooks;
 mod agents;
 mod agy_approvals;
@@ -173,7 +177,7 @@ fn set_system_languages(app: AppHandle, languages: Vec<String>) {
 fn language_changed(app: &AppHandle) {
     tray::retitle(app);
     if let Some(window) = app.get_webview_window(HUB_LABEL) {
-        let _ = window.set_title("Coucou");
+        let _ = window.set_title(preview_identity::NAME);
     }
 }
 
@@ -770,7 +774,7 @@ fn create_settings_window(app: &AppHandle) {
     let url = settings_page_url(app);
     match WebviewWindowBuilder::new(app, HUB_LABEL, url)
         .additional_browser_args(BROWSER_ARGS)
-        .title("Coucou")
+        .title(preview_identity::NAME)
         .inner_size(1100.0, 720.0)
         .min_inner_size(820.0, 560.0)
         .resizable(true)
@@ -1131,14 +1135,14 @@ pub fn run() {
 
             log::line(format!("--- Coucou {} started ---", env!("CARGO_PKG_VERSION")));
             hooks::ensure_hook_exe(&handle);
-            pipe::start(handle.clone());
+            if preview_identity::AGENT_HOOKS_ENABLED { pipe::start(handle.clone()); }
             phone_link::start_if_enabled(&handle);
             integrations::start(handle.clone());
             mail::start(handle.clone());
             spotify::sync(&handle, &loaded.active_integrations);
             // WhatsApp (experimental): nothing runs unless it is turned on and its pill is active.
             whatsapp::start(&handle, &loaded.active_integrations);
-            shortcuts::apply(&handle, &loaded.shortcuts);
+            if preview_identity::GLOBAL_SHORTCUTS_ENABLED { shortcuts::apply(&handle, &loaded.shortcuts); }
             // New versions: nothing goes to GitHub until the user agrees (update.rs).
             update::start(handle.clone());
             if loaded.autostart {

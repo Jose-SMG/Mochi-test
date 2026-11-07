@@ -30,3 +30,6 @@ build/
 presentation/production/
 __pycache__/
 *.pyc
+
+# Dependency directories, including local test symlinks
+**/node_modules

@@ -18,7 +18,7 @@ use crate::config_file::{self, FileEdit, Plan};
 use crate::{platform, settings};
 
 /// Marker that identifies a Coucou entry: the relay's file name.
-const MARKER: &str = "coucou-hook";
+const MARKER: &str = "mochi-studio-preview-hook";
 
 // ── The relay command line ────────────────────────────────────────────────────
 
@@ -351,6 +351,7 @@ pub fn preview(id: &str, install: bool) -> Result<Plan, String> {
 
 /// Only ever called from an explicit click. Returns the backups taken, one per line.
 pub fn apply(id: &str, install: bool, fingerprint: &str) -> Result<String, String> {
+    crate::preview_identity::require_agent_hooks()?;
     let agent = find(id)?;
     apply_in(agent, &platform::home_dir(), &Relay::current(), install, fingerprint)
 }
@@ -1041,8 +1042,8 @@ mod tests {
         Relay { exe: exe.into(), windows: true }
     }
 
-    const WIN: &str = r"C:\Users\me\AppData\Local\Coucou\bin\coucou-hook.exe";
-    const WIN_SPACE: &str = r"C:\Users\Jane O'Neil\AppData\Local\Coucou\bin\coucou-hook.exe";
+    const WIN: &str = r"C:\Users\me\AppData\Local\Coucou\bin\mochi-studio-preview-hook.exe";
+    const WIN_SPACE: &str = r"C:\Users\Jane O'Neil\AppData\Local\Coucou\bin\mochi-studio-preview-hook.exe";
 
     /// Installs then uninstalls `agent` in a fresh home holding `existing` in
     /// its first file, and returns (installed file, uninstalled file).
@@ -1083,7 +1084,7 @@ mod tests {
         let w = windows(WIN);
         assert_eq!(
             w.command(Shell::Sh, "Stop"),
-            "\"C:/Users/me/AppData/Local/Coucou/bin/coucou-hook.exe\" Stop"
+            "\"C:/Users/me/AppData/Local/Coucou/bin/mochi-studio-preview-hook.exe\" Stop"
         );
         assert_eq!(
             w.command(Shell::PowerShell, "--agent gemini Stop"),
@@ -1096,7 +1097,7 @@ mod tests {
         assert_eq!(spaced.command(Shell::Cmd, "x"), format!("\"{WIN_SPACE}\" x"));
         assert_eq!(
             spaced.command(Shell::PowerShell, "x"),
-            r"& 'C:\Users\Jane O''Neil\AppData\Local\Coucou\bin\coucou-hook.exe' x"
+            r"& 'C:\Users\Jane O''Neil\AppData\Local\Coucou\bin\mochi-studio-preview-hook.exe' x"
         );
     }
 
@@ -1281,7 +1282,7 @@ mod tests {
         assert_eq!(entry["powershell"], format!("& '{WIN}' --agent copilot preToolUse"));
         assert_eq!(
             entry["bash"],
-            "\"C:/Users/me/AppData/Local/Coucou/bin/coucou-hook.exe\" --agent copilot preToolUse"
+            "\"C:/Users/me/AppData/Local/Coucou/bin/mochi-studio-preview-hook.exe\" --agent copilot preToolUse"
         );
     }
 

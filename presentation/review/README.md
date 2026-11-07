@@ -1,3 +1,5 @@
+> **Preview update (2026-11-07):** legacy 0.6 installers are withdrawn. Current main uses independent Mochi Studio Preview identity. Older build references below are historical. See the root README for current distribution status.
+
 # Mochi Studio — source and design review
 
 An editable room, saved looks and native window companionship for Coucou, based on upstream revision `b1bc09de7f7c24a80bd8eca5729b8bee60f66402`.

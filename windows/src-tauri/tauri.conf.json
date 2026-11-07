@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Coucou",
-  "version": "0.6.0",
-  "identifier": "fr.louisraille.coucou",
+  "productName": "Mochi Studio Preview",
+  "version": "0.1.0",
+  "identifier": "io.github.jose-smg.mochistudio.preview",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -18,7 +18,7 @@
     "windows": [
       {
         "label": "island",
-        "title": "Coucou",
+        "title": "Mochi Studio Preview",
         "url": "index.html",
         "width": 240,
         "height": 6,
@@ -52,12 +52,12 @@
       "icons/icon.ico"
     ],
     "resources": {
-      "../target/release/coucou-hook.exe": "coucou-hook.exe"
+      "../target/release/mochi-studio-preview-hook.exe": "mochi-studio-preview-hook.exe"
     },
-    "copyright": "© Louis Raille",
+    "copyright": "\u00a9 Louis Raille",
     "category": "DeveloperTool",
-    "shortDescription": "Mochi lives at the top of your screen",
-    "longDescription": "Coucou puts Mochi at the top of your screen: it shows your Claude Code sessions and a few integrations, and lets you approve, answer, chat and drop files without leaving what you are doing.",
+    "shortDescription": "Independent Mochi Studio community preview",
+    "longDescription": "An independent community preview with a customizable room and appearances for Mochi. Based on Coucou by Louis Raill\u00e9. Agent-hook installation and automatic updates are disabled.",
     "windows": {
       "nsis": {
         "installMode": "currentUser",
@@ -68,7 +68,7 @@
         "installerHooks": "nsis/hooks.nsh"
       },
       "wix": {
-        "version": "0.6.0.1001"
+        "version": "0.1.0.101"
       }
     }
   }

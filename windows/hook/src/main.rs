@@ -34,6 +34,10 @@ use std::time::{Duration, Instant};
 
 use serde_json::{Map, Value};
 
+#[allow(dead_code)]
+#[path = "../../preview-identity.rs"]
+mod preview_identity;
+
 mod normalize;
 mod reply;
 

@@ -3,9 +3,6 @@ name: Mochi macOS and Windows
 on:
   pull_request:
     paths: ['NotchBuddy/**', 'windows/**', 'shared/**', 'tests/**', 'scripts/**', '.github/workflows/mochi-cross-platform.yml']
-  push:
-    branches: [main]
-    paths: ['NotchBuddy/**', 'windows/**', 'shared/**', 'tests/**', 'scripts/**', '.github/workflows/mochi-cross-platform.yml']
   workflow_dispatch:
 
 permissions:
@@ -55,9 +52,9 @@ jobs:
       - name: Package Mac review build
         if: runner.os == 'macOS'
         run: |
-          test -f build/mac/Build/Products/Debug/Coucou.app/Contents/Resources/mochi-scenes/runtime.js
-          node scripts/test-mochi-resources.mjs build/mac/Build/Products/Debug/Coucou.app/Contents/Resources/mochi-scenes
-          ditto -c -k --keepParent build/mac/Build/Products/Debug/Coucou.app Coucou-macOS-review.zip
+          test -f "build/mac/Build/Products/Debug/Mochi Studio Preview.app/Contents/Resources/mochi-scenes/runtime.js"
+          node scripts/test-mochi-resources.mjs "build/mac/Build/Products/Debug/Mochi Studio Preview.app/Contents/Resources/mochi-scenes"
+          ditto -c -k --keepParent "build/mac/Build/Products/Debug/Mochi Studio Preview.app" Mochi-Studio-Preview-macOS-review.zip
       - name: Build Windows relay
         if: runner.os == 'Windows'
         working-directory: windows
@@ -82,15 +79,15 @@ jobs:
           $bundledHash = (Get-FileHash windows/dist/mochi-scenes/runtime.js).Hash
           if ($sourceHash -ne $bundledHash) { throw 'Shared scene resource mismatch' }
           New-Item -ItemType Directory -Path build/windows -Force
-          Copy-Item windows/target/debug/coucou.exe build/windows/Coucou.exe
-          Copy-Item windows/target/release/coucou-hook.exe build/windows/
+          Copy-Item windows/target/debug/mochi-studio-preview.exe build/windows/mochi-studio-preview.exe
+          Copy-Item windows/target/release/mochi-studio-preview-hook.exe build/windows/
           Get-ChildItem windows/target/debug/*.dll -ErrorAction SilentlyContinue | Copy-Item -Destination build/windows/
-          Compress-Archive -Path build/windows/* -DestinationPath Coucou-Windows-review.zip
+          Compress-Archive -Path build/windows/* -DestinationPath Mochi-Studio-Preview-Windows-review.zip
       - name: Save review build
         uses: actions/upload-artifact@v4
         with:
-          name: Coucou-${{ runner.os }}-review
-          path: Coucou-*-review.zip
+          name: Mochi-Studio-Preview-${{ runner.os }}-review
+          path: Mochi-Studio-Preview-*-review.zip
           if-no-files-found: error
           retention-days: 7
 

@@ -53,7 +53,7 @@ pub fn build(app: &AppHandle) -> tauri::Result<()> {
     app.manage(UpdateItem { menu: menu.clone(), item: update, version: Mutex::new(None) });
 
     let mut builder = TrayIconBuilder::with_id("coucou")
-        .tooltip("Coucou")
+        .tooltip(crate::preview_identity::NAME)
         .menu(&menu)
         .on_menu_event(|app: &AppHandle, event| match event.id.as_ref() {
             "quit" => app.exit(0),

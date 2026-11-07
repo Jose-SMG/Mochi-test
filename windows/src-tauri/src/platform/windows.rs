@@ -46,7 +46,7 @@ use super::LocalTime;
 use crate::session_window::{self, Proc};
 
 /// File name of the Claude Code relay.
-pub const HOOK_EXE: &str = "coucou-hook.exe";
+pub const HOOK_EXE: &str = "mochi-studio-preview-hook.exe";
 
 /// Environment variable holding the home directory.
 pub const HOME_VAR: &str = "USERPROFILE";
@@ -61,7 +61,7 @@ pub fn config_dir() -> PathBuf {
     let base = std::env::var_os("APPDATA")
         .map(PathBuf::from)
         .unwrap_or_else(|| PathBuf::from("."));
-    base.join("Coucou")
+    base.join(crate::preview_identity::DATA_DIRECTORY)
 }
 
 /// %LOCALAPPDATA%\Coucou — where coucou-hook.exe, the inbox and the log live.
@@ -69,7 +69,7 @@ pub fn local_dir() -> PathBuf {
     let base = std::env::var_os("LOCALAPPDATA")
         .map(PathBuf::from)
         .unwrap_or_else(|| PathBuf::from("."));
-    base.join("Coucou")
+    base.join(crate::preview_identity::DATA_DIRECTORY)
 }
 
 /// Where a saved image goes, best first: Pictures (also where OneDrive moves

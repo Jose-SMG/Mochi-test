@@ -29,9 +29,9 @@ use tauri::{AppHandle, Emitter};
 use crate::i18n::t;
 use crate::island::WINDOW_LABEL;
 
-pub const RELEASES_URL: &str = "https://api.github.com/repos/Louis-CFM/coucou/releases?per_page=30";
+pub const RELEASES_URL: &str = "https://api.github.com/repos/Jose-SMG/Mochi-test/releases?per_page=30";
 /// Where "What's new" goes when no release is known.
-pub const RELEASES_PAGE: &str = "https://github.com/Louis-CFM/coucou/releases";
+pub const RELEASES_PAGE: &str = "https://github.com/Jose-SMG/Mochi-test/releases";
 
 /// This platform's release tags: `windows-vX.Y.Z` / `linux-vX.Y.Z`. Never the
 /// rolling `windows-latest` / `linux-latest`, nor the Mac's `v…` or Android's.
@@ -454,6 +454,7 @@ fn set_phase(app: &AppHandle, phase: Phase) {
 /// At launch: a first look 30 s in, then every hour (GitHub only every 6 h).
 /// The task sleeps in between: nothing runs while nothing is due.
 pub fn start(app: AppHandle) {
+    if !crate::preview_identity::AUTOMATIC_UPDATES_ENABLED { return; }
     remove_old_downloads();
     tauri::async_runtime::spawn(async move {
         tokio::time::sleep(FIRST_TICK).await;
@@ -537,6 +538,7 @@ async fn fetch_latest() -> Result<Option<Release>, String> {
 /// One look at GitHub. `manual`: "Check now" in Settings, which opens the card
 /// when a new version is out.
 pub async fn check(app: &AppHandle, manual: bool) {
+    if !crate::preview_identity::AUTOMATIC_UPDATES_ENABLED { return; }
     {
         let mut s = state();
         if s.busy() || s.check == CheckState::Checking {
@@ -599,6 +601,7 @@ fn remove_old_downloads() {
 
 /// "Update now": downloads, checks and runs the installer, then quits.
 pub fn install(app: &AppHandle) {
+    if !crate::preview_identity::AUTOMATIC_UPDATES_ENABLED { return; }
     let kind = this_install();
     let release = {
         let mut s = state();

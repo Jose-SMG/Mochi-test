@@ -1,3 +1,5 @@
+> **Preview update (2026-11-07):** legacy 0.6 installers are withdrawn. Current main uses independent Mochi Studio Preview identity. See [isolation and build status](INDEPENDENT-PREVIEW.md). Older test/build references below are historical, not validation of the new installers.
+
 # Beta review checklist
 
 Automated results belong in verification.json and the native reports. Do not mark human-device checks complete from a CI build alone.

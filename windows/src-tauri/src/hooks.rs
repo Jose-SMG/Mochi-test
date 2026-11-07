@@ -39,7 +39,7 @@ pub const HOOK_EVENTS: &[(&str, u64)] = &[
 ];
 
 /// Marker that identifies a Coucou entry inside settings.json.
-const MARKER: &str = "coucou-hook";
+const MARKER: &str = "mochi-studio-preview-hook";
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -234,6 +234,7 @@ fn plan_to_preview(plan: config_file::Plan) -> HookPreview {
 /// `fingerprint` is the one the preview was computed from: a settings.json that
 /// changed in between is refused rather than overwritten (see config_file).
 pub fn write(install: bool, fingerprint: &str) -> Result<String, String> {
+    crate::preview_identity::require_agent_hooks()?;
     let backups = config_file::apply(&edits(install), fingerprint)?;
     Ok(backups.first().map(|p| p.to_string_lossy().to_string()).unwrap_or_default())
 }
@@ -326,6 +327,7 @@ pub fn status_line_preview(install: bool) -> Result<HookPreview, String> {
 /// the hooks. Installing first saves a status line of the user's own, removing
 /// puts it back (or removes the key if there was none).
 pub fn status_line_write(install: bool, fingerprint: &str) -> Result<String, String> {
+    crate::preview_identity::require_agent_hooks()?;
     let before = config_file::read(&settings_path())
         .and_then(|bytes| config_file::parse_json(bytes.as_deref(), "settings.json"))?;
     let previous = read_status_line_previous();
@@ -365,7 +367,7 @@ fn save_status_line_previous(status_line: &Value) -> std::io::Result<()> {
     config_file::write_like(&path, &path, config_file::pretty(status_line).as_bytes())
 }
 
-/// Copies the relay (coucou-hook.exe / coucou-hook) into the local data dir's
+/// Copies the relay (mochi-studio-preview-hook.exe / coucou-hook) into the local data dir's
 /// bin/ on launch. In a bundled install it comes from the app resources; in
 /// `tauri dev` it sits next to the app binary in the workspace target directory.
 ///
@@ -375,6 +377,7 @@ fn save_status_line_previous(status_line: &Value) -> std::io::Result<()> {
 /// the relay was simply never installed. It only looked healthy on a developer
 /// machine, where a leftover copy from `tauri dev` was already sitting in bin/.
 pub fn ensure_hook_exe(app: &AppHandle) {
+    if !crate::preview_identity::AGENT_HOOKS_ENABLED { return; }
     let dest = settings::hook_exe_path();
     let Some(dir) = dest.parent() else { return };
     // Nobody else may swap the relay Claude Code runs: its folder is ours only.
@@ -602,7 +605,7 @@ mod tests {
 
         // Install.
         let plan = preview(true).expect("a BOM must not stop the preview");
-        assert!(plan.diff.contains("coucou-hook"), "the diff must show what changes");
+        assert!(plan.diff.contains("mochi-studio-preview-hook"), "the diff must show what changes");
         let backup = write(true, &plan.fingerprint).expect("install should succeed");
 
         // The backup holds the original bytes, BOM and all.

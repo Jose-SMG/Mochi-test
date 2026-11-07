@@ -10,7 +10,7 @@ func escapedForLog(_ s: String) -> String {
     }.joined()
 }
 
-/// Appends one timestamped line to `~/Library/Logs/NotchBuddy/<fileName>`.
+/// Appends one timestamped line to `~/Library/Logs/MochiStudioPreview/<fileName>`.
 /// - Log directory is created at mode 0700.
 /// - Log file is set to mode 0600 on first creation and after each rotation.
 /// - File is rotated (truncated) when it reaches 1 MB.
@@ -34,7 +34,7 @@ private enum AppLogWriter {
     nonisolated(unsafe) static var formatters: [String: DateFormatter] = [:]
 
     static let logsDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0]
-        .appendingPathComponent("Logs/NotchBuddy")
+        .appendingPathComponent("Logs/MochiStudioPreview")
 
     static func write(_ fileName: String, _ message: String, date: Date, format: String) {
         let fm = FileManager.default

@@ -124,6 +124,7 @@ final class HotKeyCenter {
     // MARK: - Private
 
     private func registerOne(_ action: ShortcutAction) {
+        guard PreviewIdentity.globalShortcutsEnabled else { return }
         let spec   = ShortcutLogic.hotKey(for: action)
         let carbon = ShortcutLogic.carbonModifiers(fromNS: spec.nsFlags)
         let idx    = UInt32(ShortcutAction.allCases.firstIndex(of: action)!)

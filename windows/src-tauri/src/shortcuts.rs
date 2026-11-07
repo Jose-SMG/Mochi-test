@@ -345,6 +345,7 @@ fn release<R: Runtime>(app: &AppHandle<R>) {
 /// tells the settings window how each one went. Never fails: a shortcut that
 /// can't be had is reported, not fatal.
 pub fn apply<R: Runtime>(app: &AppHandle<R>, stored: &Bindings) {
+    if !crate::preview_identity::GLOBAL_SHORTCUTS_ENABLED { return; }
     release(app);
     let blocked = crate::platform::global_shortcuts_blocked();
     let plan = plan(stored, typed_character);

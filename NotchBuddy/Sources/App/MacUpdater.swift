@@ -111,6 +111,7 @@ final class MacUpdater: ObservableObject {
 
     /// At launch: a first look 30 s in, then every hour (a GitHub call only every 6 h).
     func start() {
+        guard PreviewIdentity.automaticUpdatesEnabled else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 30) { [weak self] in self?.tick(launch: true) }
         timer?.invalidate()
         let t = Timer(timeInterval: 3600, repeats: true) { _ in
@@ -166,6 +167,7 @@ final class MacUpdater: ObservableObject {
     // MARK: - Check
 
     func check(manual: Bool) async {
+        guard PreviewIdentity.automaticUpdatesEnabled else { return }
         guard !busy, lastCheck != .checking else { return }
         lastCheck = .checking
         var req = URLRequest(url: MacUpdate.releasesURL)
@@ -244,6 +246,7 @@ final class MacUpdater: ObservableObject {
     // MARK: - Install
 
     func install() {
+        guard PreviewIdentity.automaticUpdatesEnabled else { return }
         guard case .available(let release) = phase else { return }
         let bundle = Bundle.main.bundleURL
         let parent = bundle.deletingLastPathComponent().path

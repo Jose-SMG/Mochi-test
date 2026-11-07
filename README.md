@@ -2,13 +2,13 @@
 
 # Mochi Studio
 
-**Distribution update:** the previous 0.6 preview is withdrawn because it shares Coucou’s identifiers and data paths. Independent community-preview builds are being prepared. Do not install the old preview over Coucou.
+**Independent community preview:** own app name, identifiers, version and data. The earlier preview that shared Coucou’s identity has been withdrawn. Agent hooks, global shortcuts and automatic updates are disabled. New installers are published only after both native builds and isolation checks pass.
 
 **A room to make your own. A look to keep. A companion for your desktop.**
 
-Community contribution to [Coucou](https://github.com/Louis-CFM/coucou), by Louis Raillé. Preview for macOS and Windows.
+Independent community project based on [Coucou](https://github.com/Louis-CFM/coucou), by Louis Raillé. Preview for macOS and Windows.
 
-[Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-v0.6.0-beta.1) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
+[Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.1) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
 
 ![Room styles and editor](presentation/review/room-preview.gif)
 
@@ -38,10 +38,10 @@ The source includes automatic exposed-edge selection, arm grip, window following
 
 | System | Installer |
 | --- | --- |
-| macOS 15+, Apple Silicon and Intel | [Universal DMG](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-v0.6.0-beta.1/Coucou-Mochi-0.6.0-beta.1-macOS-universal.dmg) |
-| Windows 10/11 x64 | [Setup EXE](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-v0.6.0-beta.1/Coucou-Mochi-0.6.0-beta.1-Windows-x64-setup.exe) |
+| macOS 15+, Apple Silicon and Intel | [Universal DMG](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-preview-v0.1.0-beta.1/Mochi-Studio-Preview-0.1.0-beta.1-macOS-universal.dmg) |
+| Windows 10/11 x64 | [Setup EXE](https://github.com/Jose-SMG/Mochi-test/releases/download/mochi-studio-preview-v0.1.0-beta.1/Mochi-Studio-Preview-0.1.0-beta.1-Windows-x64-setup.exe) |
 
-The [release](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-v0.6.0-beta.1) also includes MSI, portable ZIP, source manifests and SHA-256 checksums. Close Coucou and back up preferences before testing: this beta retains Coucou's application identifiers and can replace an existing installation.
+The [release](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.1) also includes MSI, portable ZIP, source manifests and SHA-256 checksums. This preview uses `io.github.jose-smg.mochistudio.preview` and its own `MochiStudioPreview` data directory. It does not migrate or remove official Coucou settings. The release link becomes available after the native CI checks pass.
 
 Windows is unsigned. The Mac package is ad-hoc signed and not notarized; its optimized Debug configuration excludes the PHONE_LINK/iCloud integration enabled by upstream Release. Browser/system warnings may remain. [Installation guide in Spanish](INSTALLERS.md).
 
@@ -83,15 +83,21 @@ See [the original Coucou README](README.coucou.md) and [contribution guidelines]
 | `docs/mochi-home/`, `docs/mochi-perch/` | Original concept documents |
 | `distribution/` | Verified source release and installer migration manifest |
 
-The history retains the upstream Coucou snapshot and feature commits. The review branches separate [room/wardrobe](https://github.com/Jose-SMG/Mochi-test/tree/review/room-and-wardrobe) and [window attachment/jumps](https://github.com/Jose-SMG/Mochi-test/tree/review/window-grip-and-jumps). The latter is stacked on the room branch.
+The room and native interaction work remain part of this independent project. Historical `review/*` branches and their draft PRs are archived design references: they retain the former app identity and must not be used to build or install the preview. Build current `main` only.
 
-[Wardrobe overlap notes](presentation/review/WARDROBE-OVERLAP.md) cover upstream PRs #1025, #737 and #738. They identify shared code and design decisions; compatibility with those unmerged PRs has not been established. The offline Three.js dependency and added webview/resource costs also need maintainer review.
+[Wardrobe overlap notes](presentation/review/WARDROBE-OVERLAP.md) cover upstream PRs #1025, #737 and #738. Contributions to Coucou itself must be small, separate Canvas-only changes with no new dependencies, following upstream `CLAUDE.md`. The Three.js room is not proposed for upstream merging.
 
 ## Validation and provenance
 
-Both existing native installer packages were built from `6b4e5ea2f80ab59375973c73034d1f16d020b49e`, on upstream `b1bc09de7f7c24a80bd8eca5729b8bee60f66402`. Packaging checks passed, including native edge-selection tests and packaged Mac WebKit rendering/PNG export. Full native interaction QA did not pass and is not marked complete. [Detailed status](docs/mochi/KNOWN-ISSUES.md).
+The installers workflow builds both native platforms directly from this repository. Release manifests identify the source commit, repository, independent app identifier and artifact hashes. Publishing requires both builds, isolation checks, native edge-selection tests and a Windows install/start/uninstall coexistence check to pass. Full native drag/follow/jump validation is still pending.
 
-Installer migration preserves the original files and verifies every size and SHA-256 digest before publishing them in this repository. No binary is rebuilt or relabeled as fully validated during migration.
+Previous copied installers are withdrawn; the import workflow is disabled by its retirement guard. See [the isolation changes](docs/mochi/INDEPENDENT-PREVIEW.md).
+
+## Versions
+
+| Version | Changes |
+| --- | --- |
+| [0.1.0](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.1) | Independent community preview, separate identity and data, source-built installers |
 
 ## Credits and license
 

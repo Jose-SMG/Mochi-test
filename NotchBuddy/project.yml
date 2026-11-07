@@ -140,12 +140,12 @@ targets:
     info:
       path: Resources/Info.plist
       properties:
-        CFBundleName: Coucou
-        CFBundleDisplayName: Coucou
-        CFBundleIdentifier: fr.louisraille.NotchBuddy
-        CFBundleVersion: "6001"
-        CFBundleShortVersionString: "0.6.0"
-        MochiPreviewVersion: "0.6.0-beta.1"
+        CFBundleName: Mochi Studio Preview
+        CFBundleDisplayName: Mochi Studio Preview
+        CFBundleIdentifier: io.github.jose-smg.mochistudio.preview
+        CFBundleVersion: "101"
+        CFBundleShortVersionString: "0.1.0"
+        MochiPreviewVersion: "0.1.0-beta.1"
         CFBundlePackageType: APPL
         LSUIElement: YES
         NSHighResolutionCapable: YES
@@ -178,29 +178,30 @@ targets:
           - zh-Hant
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: fr.louisraille.NotchBuddy
-        PRODUCT_NAME: Coucou
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.jose-smg.mochistudio.preview
+        DEVELOPMENT_TEAM: ""
+        PRODUCT_NAME: Mochi Studio Preview
         INFOPLIST_FILE: Resources/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         MACOSX_DEPLOYMENT_TARGET: "15.0"
         ENABLE_SANDBOX: NO
       configs:
         DebugCloud:
-          CODE_SIGN_ENTITLEMENTS: Resources/CoucouCloud.entitlements
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG PHONE_LINK"
+          CODE_SIGN_ENTITLEMENTS: ""
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
           # The build run every day from Xcode: optimized like Release, so Mochi's
           # drawing costs what it costs for users (unoptimized Swift was ~2× the CPU).
           SWIFT_OPTIMIZATION_LEVEL: "-O"
         # The distributed build carries the iPhone sync (off until the user
         # turns it on in Settings), so it needs iCloud and its Developer ID profile.
         Release:
-          CODE_SIGN_ENTITLEMENTS: Resources/CoucouReleaseCloud.entitlements
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: PHONE_LINK
-          PROVISIONING_PROFILE_SPECIFIER: "Coucou Developer ID"
+          CODE_SIGN_ENTITLEMENTS: ""
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: ""
+          PROVISIONING_PROFILE_SPECIFIER: ""
         ReleaseCloud:
-          CODE_SIGN_ENTITLEMENTS: Resources/CoucouReleaseCloud.entitlements
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS: PHONE_LINK
-          PROVISIONING_PROFILE_SPECIFIER: "Coucou Developer ID"
+          CODE_SIGN_ENTITLEMENTS: ""
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: ""
+          PROVISIONING_PROFILE_SPECIFIER: ""
     dependencies:
       - package: FluidAudio
     postBuildScripts:

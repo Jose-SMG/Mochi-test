@@ -1,11 +1,16 @@
 {
-  "version": "0.6.0-beta.1",
-  "tag": "mochi-studio-v0.6.0-beta.1",
+  "version": "0.1.0-beta.1",
+  "tag": "mochi-studio-preview-v0.1.0-beta.1",
   "channel": "community beta",
   "official_release": false,
   "upstream": "b1bc09de7f7c24a80bd8eca5729b8bee60f66402",
-  "macos_short_version": "0.6.0",
-  "macos_build": "6001",
-  "windows_msi_version": "0.6.0.1001",
-  "application_version": "0.6.0"
+  "macos_short_version": "0.1.0",
+  "macos_build": "101",
+  "windows_msi_version": "0.1.0.101",
+  "application_version": "0.1.0",
+  "product_name": "Mochi Studio Preview",
+  "identifier": "io.github.jose-smg.mochistudio.preview",
+  "data_directory": "MochiStudioPreview",
+  "agent_hooks_enabled": false,
+  "automatic_updates_enabled": false
 }

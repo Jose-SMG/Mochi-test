@@ -23,7 +23,7 @@ fn socket_path() -> Option<PathBuf> {
         .map(PathBuf::from)
         .filter(|p| p.is_absolute())
         .unwrap_or_else(|| PathBuf::from(format!("/run/user/{}", unsafe { libc::getuid() })));
-    is_private_dir(&dir).then(|| dir.join("coucou.sock"))
+    is_private_dir(&dir).then(|| dir.join("mochi-studio-preview.sock"))
 }
 
 /// A real directory (not a symlink), owned by us, no access for group or others.

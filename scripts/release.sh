@@ -8,6 +8,8 @@
 # NotchBuddy/project.yml must match the version, and CHANGELOG.md needs a
 # "## <version>" section: it becomes the release notes.
 set -euo pipefail
+echo "Official Coucou publishing is disabled in Mochi Studio Preview. Use the Mochi Studio installers workflow." >&2
+exit 1
 
 VERSION="${1:?Usage: $0 <version> [--finish]}"
 MODE="${2:-}"

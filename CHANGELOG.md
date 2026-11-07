@@ -1,3 +1,14 @@
+# Mochi Studio Preview changelog
+
+## 0.1.0 — independent community preview
+
+- Separate app names, bundle identifiers, versions, data, credentials and IPC from official Coucou.
+- Disable agent-hook installation/removal, automatic updates and global shortcuts in the preview.
+- Build macOS and Windows installers from this repository in CI, with source manifests and coexistence checks.
+- Keep the room and experimental window features in this independent project.
+
+The upstream changelog is retained below as source history; its versions are not preview releases.
+
 # Changelog
 
 ## Mochi Studio preview · based on Coucou 0.6

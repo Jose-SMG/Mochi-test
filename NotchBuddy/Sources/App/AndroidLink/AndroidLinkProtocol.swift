@@ -45,7 +45,7 @@ enum AndroidLinkProtocol {
     ]
 
     /// The DNS-SD service type the phone browses for.
-    static let serviceType = "_coucou._tcp"
+    static let serviceType = "_mochi-preview._tcp"
     /// How many hex characters of the certificate fingerprint go into the TXT record.
     static let fingerprintIdLength = 16
     /// The protocol version in the TXT record.

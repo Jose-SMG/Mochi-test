@@ -14,7 +14,7 @@ final class HookServer: @unchecked Sendable {
     // Support directory paths
     static var supportDir: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("NotchBuddy")
+            .appendingPathComponent("MochiStudioPreview")
     }
     static var socketPath: String {
         #if APPSTORE
@@ -465,6 +465,7 @@ final class HookServer: @unchecked Sendable {
     // MARK: - Start
 
     func start() {
+        guard PreviewIdentity.agentHooksEnabled else { return }
         // Ensure support directory exists (mode 0700 — not world-readable)
         let dir = Self.supportDir
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
@@ -1713,6 +1714,7 @@ final class HookServer: @unchecked Sendable {
     // MARK: - nb-hook script installation
 
     func installHookScript() {
+        guard PreviewIdentity.agentHooksEnabled else { return }
         #if APPSTORE
         // In App Store mode the script is written during settings hook installation
         // (requires NSOpenPanel to ~/.claude chosen by the user)
@@ -1809,6 +1811,7 @@ final class HookServer: @unchecked Sendable {
     /// Writes the hooks to disk (call after user confirms preview).
     /// Refused if settings.json changed since the preview, or cannot be backed up.
     func writeClaudeHooks() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let data = _pendingHooksData else { return }
         let settingsURL = FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".claude/settings.json")
@@ -1862,6 +1865,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     func uninstallClaudeHooks() throws {
+        try PreviewIdentity.requireAgentHooks()
         let settingsURL = FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".claude/settings.json")
         let snapshot = try ClaudeSettingsFile.read(at: settingsURL)
@@ -1995,6 +1999,7 @@ final class HookServer: @unchecked Sendable {
 
     /// Writes settings.json and commits side effects (call after user confirms).
     func writeStatusLine() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let data = _pendingStatusLineData else { return }
         let settingsURL = FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".claude/settings.json")
@@ -2018,6 +2023,7 @@ final class HookServer: @unchecked Sendable {
     /// Writes nb-hook script and updates settings.json in one shot.
     /// claudeURL must be a URL from NSOpenPanel (sandbox access is granted immediately — no security scope needed).
     func installAndWriteClaudeHooksAppStore(claudeURL: URL) throws {
+        try PreviewIdentity.requireAgentHooks()
         let (data, original) = try buildHooksData(claudeURL: claudeURL)
 
         // Write nb-hook (shell wrapper) + nb-hook.py (Python relay) into ~/.claude/coucou/
@@ -2045,6 +2051,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     func uninstallClaudeHooksAppStore(claudeURL: URL) throws {
+        try PreviewIdentity.requireAgentHooks()
         let settingsURL = claudeURL.appendingPathComponent("settings.json")
         let snapshot = try ClaudeSettingsFile.read(at: settingsURL)
         var settings = snapshot.object
@@ -2207,6 +2214,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     func writeGeminiHooks() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let data = _pendingGeminiData, let fp = _pendingGeminiFingerprint else { return }
         let url = Self.geminiSettingsURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -2303,6 +2311,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     func writeAgyHooks() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let data = _pendingAgyData, let fp = _pendingAgyFingerprint else { return }
         let url = Self.agyHooksURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -2441,6 +2450,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     func writeCodexHooks() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let data = _pendingCodexData, let fp = _pendingCodexFingerprint else { return }
         let url = Self.codexHooksURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -2566,6 +2576,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     func writeCopilotHooks() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let fp = _pendingCopilotFingerprint else { return }
         let url = Self.copilotHooksURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -2687,6 +2698,7 @@ final class HookServer: @unchecked Sendable {
     }
 
     func writeMuseHooks() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let data = _pendingMuseData, let fp = _pendingMuseFingerprint else { return }
         let url = Self.museSettingsURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -2861,6 +2873,7 @@ export const CoucouPlugin = async (_ctx) => ({
     }
 
     func writeOpenCodePlugin() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let fp = _pendingOpenCodeFingerprint else { return }
         let url = Self.openCodePluginURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -2889,6 +2902,7 @@ export const CoucouPlugin = async (_ctx) => ({
     }
 
     func removeOpenCodePlugin() throws {
+        try PreviewIdentity.requireAgentHooks()
         let url = Self.openCodePluginURL
         guard FileManager.default.fileExists(atPath: url.path) else { return }
         let content = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
@@ -2969,6 +2983,7 @@ export default function (amp: any): void {
     }
 
     func writeAmpPlugin() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let fp = _pendingAmpFingerprint else { return }
         let url = Self.ampPluginURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -2997,6 +3012,7 @@ export default function (amp: any): void {
     }
 
     func removeAmpPlugin() throws {
+        try PreviewIdentity.requireAgentHooks()
         let url = Self.ampPluginURL
         guard FileManager.default.fileExists(atPath: url.path) else { return }
         let content = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
@@ -3478,6 +3494,7 @@ description: Coucou notch integration — generated by Coucou.app
     }
 
     func writeHermesPlugin() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let fp = _pendingHermesPluginFingerprint else { return }
         let url = Self.hermesInitPyURL
         let current = (try? Data(contentsOf: url)) ?? Data()
@@ -3508,6 +3525,7 @@ description: Coucou notch integration — generated by Coucou.app
     }
 
     func removeHermesPlugin() throws {
+        try PreviewIdentity.requireAgentHooks()
         let url = Self.hermesInitPyURL
         guard FileManager.default.fileExists(atPath: url.path) else { return }
         let content = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
@@ -3564,6 +3582,7 @@ description: Coucou notch integration — generated by Coucou.app
     }
 
     func writeHermesConfig() throws {
+        try PreviewIdentity.requireAgentHooks()
         guard let fp = _pendingHermesConfigFingerprint,
               let content = _pendingHermesConfigContent else { return }
         let url = Self.hermesConfigURL
@@ -3937,7 +3956,7 @@ def main():
     # COUCOU_SOCKET points the relay at another socket, for instance the one an
     # `ssh -R` tunnel forwards from the Mac to a remote machine (docs/REMOTE.md).
     socket_path = os.path.expanduser(
-        os.environ.get('COUCOU_SOCKET') or '~/Library/Application Support/NotchBuddy/nb.sock'
+        os.environ.get('COUCOU_SOCKET') or '~/Library/Application Support/MochiStudioPreview/nb.sock'
     )
 
     # --statusline mode: relay rate_limits to Coucou, then delegate to saved previous
