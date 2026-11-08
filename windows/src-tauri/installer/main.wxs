@@ -128,12 +128,15 @@
         </Directory>
 
         <DirectoryRef Id="INSTALLDIR">
+            <!-- Per-machine identity has its own stable registry component/keypath. -->
+            <Component Id="InstallerIdentity" Guid="*" Win64="$(var.Win64)">
+                <RegistryValue Root="HKLM" Key="Software\{{bundle_id}}\InstallerIdentity" Name="ProductCode" Type="string" Value="[ProductCode]" KeyPath="yes" />
+            </Component>
             <Component Id="RegistryEntries" Guid="*">
                 <RegistryKey Root="HKCU" Key="Software\\{{manufacturer}}\\Coucou Community">
                     <RegistryValue Name="InstallDir" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
 
                 </RegistryKey>
-                <RegistryValue Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="PreviewIdentifier" Type="string" Value="{{bundle_id}}" />
                 <!-- Change the Root to HKCU for perUser installations -->
                 {{#each deep_link_protocols as |protocol| ~}}
                 <RegistryKey Root="HKLM" Key="Software\Classes\\{{protocol}}">
@@ -233,6 +236,7 @@
                 Absent="disallow">
 
             <ComponentRef Id="RegistryEntries"/>
+            <ComponentRef Id="InstallerIdentity"/>
 
             {{#each resource_file_ids as |resource_file_id| ~}}
                 <ComponentRef Id="{{ resource_file_id }}"/>

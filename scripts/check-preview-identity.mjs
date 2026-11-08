@@ -47,7 +47,7 @@ assert.equal(tauri.bundle.windows.nsis.template, 'installer/installer.nsi');
 assert.equal(tauri.bundle.windows.wix.template, 'installer/main.wxs');
 assert(installer.includes('!define INSTALLNAMESPACE "Coucou Community"'));
 assert(installer.includes('Uninstall\\${INSTALLNAMESPACE}'));
-assert(installer.includes('"PreviewIdentifier"'));
+assert(installer.includes('InstallerIdentity" "ProductCode"'));
 assert(read('windows/src-tauri/src/lib.rs').includes('.app_name(preview_identity::IDENTIFIER)'));
 assert(read('windows/src-tauri/Cargo.toml').includes('default-run = "coucou"'));
 assert(read('windows/src-tauri/src/mochi_studio.rs').includes('.title(crate::preview_identity::NAME)'));

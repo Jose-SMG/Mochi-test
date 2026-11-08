@@ -203,6 +203,7 @@ Function PageReinstall
   ; our ${PRODUCTNAME} and ${MANUFACTURER} but wasn't installed by our WiX installer,
   ; however, this should be fine since the user will have to confirm the uninstallation
   ; and they can chose to abort it if doesn't make sense.
+  ReadRegStr $R2 HKLM "Software\${BUNDLEID}\InstallerIdentity" "ProductCode"
   StrCpy $0 0
   wix_loop:
     EnumRegKey $1 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" $0
@@ -213,8 +214,7 @@ Function PageReinstall
     ; Match our previous distinct name or an explicit private identity marker.
     ; Never discover an official Coucou MSI by its visible name/publisher.
     StrCmp "$R0$R1" "${INSTALLNAMESPACE}${MANUFACTURER}" own_wix
-    ReadRegStr $R2 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1" "PreviewIdentifier"
-    StrCmp $R2 "${BUNDLEID}" 0 wix_loop
+    StrCmp $1 $R2 0 wix_loop
     own_wix:
     ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1" "UninstallString"
     ${StrCase} $R1 $R0 "L"

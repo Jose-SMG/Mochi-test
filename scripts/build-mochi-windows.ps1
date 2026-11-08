@@ -24,7 +24,7 @@ try {
         Invoke-Native -File npm.cmd -Arguments @('test')
         Invoke-Native -File cargo -Arguments @('build', '--release', '--locked', '-p', 'coucou-hook')
         Invoke-Native -File cargo -Arguments @('test', '--release', '--workspace', '--locked')
-        $TauriArgs = @('tauri', 'build', '--bundles', 'nsis,msi')
+        $TauriArgs = @('tauri', 'build', '--verbose', '--bundles', 'nsis,msi')
         if ($env:MOCHI_WINDOWS_CERT_THUMBPRINT) {
             $Thumbprint = $env:MOCHI_WINDOWS_CERT_THUMBPRINT.Replace(' ', '')
             if ($Thumbprint -notmatch '^[A-Fa-f0-9]{40}$' -or -not (Test-Path "Cert:\CurrentUser\My\$Thumbprint")) { throw 'The requested signing certificate is not installed in CurrentUser/My.' }
