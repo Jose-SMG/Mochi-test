@@ -2,17 +2,20 @@
 
 # Preview status and known limitations
 
-## Current independent preview: 0.1.0-beta.4
+## Current community build: 0.1.1-beta.1
 
-[Both native builds and the source-verified publication passed](https://github.com/Jose-SMG/Mochi-test/actions/runs/42521824051), from `a71604c9b4dcc55143f19fb78eb3675dfa8aa14f`.
+[Both native builds and the source-verified publication passed](https://github.com/Jose-SMG/Mochi-test/actions/runs/42527134423), from `896155a5e727b7ca706f000ef4a8875fa204eee9`.
 
 - Universal macOS bundle: own identifier/version, bundled scene checks, real WebKit rendering/PNG export, ad-hoc signature and DMG verification.
 - Windows: 620 app tests and 36 relay tests passed (7 app tests ignored); EXE, MSI and portable ZIP compiled. Native edge-selection tests passed.
 - The actual NSIS EXE was installed, launched with separate preferences, and uninstalled in CI. The preview executable was removed and all six official Coucou/Claude sentinel files kept their hashes. [Result](../../distribution/windows-coexistence.json).
+- The actual app window title is Coucou; the installer is registered as Coucou Community 0.1.1. Room and appearance preferences survive uninstalling this build. The app retains the former preview settings directory.
 - The native edge indicator exists and remains hidden during cold startup, verified through Windows HWND visibility inspection.
 - Both installers' public download URLs returned HTTP 200. The published artifact sizes and GitHub SHA-256 digests match the [source-build manifest](../../distribution/published-preview-manifest.json).
 
 This is a CI smoke/coexistence check. MSI installation, physical Mac/Windows coexistence, and full drag/follow/jump interactions have not been verified. Signing limitations below still apply.
+
+The production utility page also passed 12 Chromium size/DPI cases locally: empty at startup, visible only when enabled, cleared after the target, and empty after a renderer reload. This is renderer validation, not a full installed-app drag test.
 
 ## Historical withdrawn beta packages
 

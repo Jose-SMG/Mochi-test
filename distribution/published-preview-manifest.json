@@ -1,94 +1,96 @@
 {
-  "version": "0.1.0-beta.4",
-  "source_commit": "a71604c9b4dcc55143f19fb78eb3675dfa8aa14f",
+  "version": "0.1.1-beta.1",
+  "source_commit": "896155a5e727b7ca706f000ef4a8875fa204eee9",
   "source_repository": "Jose-SMG/Mochi-test",
   "official_release": false,
   "platforms": {
     "macOS": {
-      "product": "Mochi Studio Preview",
+      "product": "Coucou Community",
+      "display_name": "Coucou",
       "identifier": "io.github.jose-smg.mochistudio.preview",
       "data_directory": "MochiStudioPreview",
       "agent_hooks_enabled": false,
       "automatic_updates_enabled": false,
       "source_repository": "Jose-SMG/Mochi-test",
       "channel": "independent community preview",
-      "version": "0.1.0-beta.4",
+      "version": "0.1.1-beta.1",
       "official_release": false,
       "features": [
         "home",
         "perch"
       ],
-      "source_commit": "a71604c9b4dcc55143f19fb78eb3675dfa8aa14f",
+      "source_commit": "896155a5e727b7ca706f000ef4a8875fa204eee9",
       "source_base": "b1bc09de7f7c24a80bd8eca5729b8bee60f66402",
       "platform": "macOS",
       "architecture": "universal",
       "signature": "ad-hoc; not notarized",
       "artifacts": [
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.4-macOS-universal.dmg",
-          "size_bytes": 45005435,
-          "sha256": "6ef2363501805facc4cc937dc9cf2e1f8a6bf97b70674e254840c2489cf20cd7"
+          "name": "Coucou-Community-0.1.1-beta.1-macOS-universal.dmg",
+          "size_bytes": 45038663,
+          "sha256": "da6d210e41fa89c7a42d4348c1e1d1780992ee7514d7fa7fb466c28b9698673c"
         }
       ]
     },
     "Windows": {
-      "product": "Mochi Studio Preview",
+      "product": "Coucou Community",
+      "display_name": "Coucou",
       "identifier": "io.github.jose-smg.mochistudio.preview",
       "data_directory": "MochiStudioPreview",
       "agent_hooks_enabled": false,
       "automatic_updates_enabled": false,
       "source_repository": "Jose-SMG/Mochi-test",
       "channel": "independent community preview",
-      "version": "0.1.0-beta.4",
+      "version": "0.1.1-beta.1",
       "official_release": false,
       "features": [
         "home",
         "perch"
       ],
-      "source_commit": "a71604c9b4dcc55143f19fb78eb3675dfa8aa14f",
+      "source_commit": "896155a5e727b7ca706f000ef4a8875fa204eee9",
       "source_base": "b1bc09de7f7c24a80bd8eca5729b8bee60f66402",
       "platform": "Windows",
       "architecture": "x64",
       "signature": "unsigned",
       "artifacts": [
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-portable.zip",
-          "size_bytes": 15900458,
-          "sha256": "6b3fae67ef3a93f029a3e02b866cd295e96f27a993187036e2c933de503183b8"
+          "name": "Coucou-Community-0.1.1-beta.1-Windows-x64-portable.zip",
+          "size_bytes": 15901053,
+          "sha256": "5e64e6adf105cbc1277d5420fe2ac3ceb8564fbc17dbffc072e3319a69830115"
         },
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-setup.exe",
-          "size_bytes": 12292505,
-          "sha256": "27dc229c6339f4130dacc4733e044757ef7932807e889e736d6b2eced697fc2d"
+          "name": "Coucou-Community-0.1.1-beta.1-Windows-x64-setup.exe",
+          "size_bytes": 12294257,
+          "sha256": "3c38fab08838806a6c1f2c2cd922f7783068c84c1ded37e81fe1431f9bba0701"
         },
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64.msi",
+          "name": "Coucou-Community-0.1.1-beta.1-Windows-x64.msi",
           "size_bytes": 15872000,
-          "sha256": "83bfefd861222cc783a0add703138c43ac2bb92c760c0018460c1e562801b655"
+          "sha256": "50e6b399c0b0f765a6820525df51ae0982fcd54968d65da4cdd7a0309c9c8c26"
         }
       ]
     }
   },
   "files": [
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.4-macOS-universal.dmg",
-      "size_bytes": 45005435,
-      "sha256": "6ef2363501805facc4cc937dc9cf2e1f8a6bf97b70674e254840c2489cf20cd7"
+      "name": "Coucou-Community-0.1.1-beta.1-macOS-universal.dmg",
+      "size_bytes": 45038663,
+      "sha256": "da6d210e41fa89c7a42d4348c1e1d1780992ee7514d7fa7fb466c28b9698673c"
     },
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-portable.zip",
-      "size_bytes": 15900458,
-      "sha256": "6b3fae67ef3a93f029a3e02b866cd295e96f27a993187036e2c933de503183b8"
+      "name": "Coucou-Community-0.1.1-beta.1-Windows-x64-portable.zip",
+      "size_bytes": 15901053,
+      "sha256": "5e64e6adf105cbc1277d5420fe2ac3ceb8564fbc17dbffc072e3319a69830115"
     },
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-setup.exe",
-      "size_bytes": 12292505,
-      "sha256": "27dc229c6339f4130dacc4733e044757ef7932807e889e736d6b2eced697fc2d"
+      "name": "Coucou-Community-0.1.1-beta.1-Windows-x64-setup.exe",
+      "size_bytes": 12294257,
+      "sha256": "3c38fab08838806a6c1f2c2cd922f7783068c84c1ded37e81fe1431f9bba0701"
     },
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64.msi",
+      "name": "Coucou-Community-0.1.1-beta.1-Windows-x64.msi",
       "size_bytes": 15872000,
-      "sha256": "83bfefd861222cc783a0add703138c43ac2bb92c760c0018460c1e562801b655"
+      "sha256": "50e6b399c0b0f765a6820525df51ae0982fcd54968d65da4cdd7a0309c9c8c26"
     }
   ]
 }

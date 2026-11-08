@@ -1,13 +1,16 @@
 {
+  "product": "Coucou Community",
   "passed": true,
+  "source_commit": "896155a5e727b7ca706f000ef4a8875fa204eee9",
   "checks": [
     "independent executable installed",
+    "Coucou Community installer name and version registered",
     "native app runs with separate preferences",
     "edge indicator exists and stays hidden at cold start",
+    "native app window title is Coucou",
     "agent-hook installation disabled",
     "independent preview executable actually removed",
+    "room and appearance preferences survive uninstall",
     "all six official app, data and Claude hook sentinels unchanged"
-  ],
-  "source_commit": "a71604c9b4dcc55143f19fb78eb3675dfa8aa14f",
-  "product": "Mochi Studio Preview"
+  ]
 }
