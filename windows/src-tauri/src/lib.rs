@@ -64,7 +64,7 @@ use std::sync::{Arc, Mutex};
 
 use serde::Serialize;
 use tauri::{AppHandle, Emitter, Manager, State, WebviewUrl, WebviewWindowBuilder};
-use tauri_plugin_autostart::{ManagerExt, MacosLauncher};
+use tauri_plugin_autostart::ManagerExt;
 
 use chat::{Chat, ChatContext, ChatReply, ModelInfo};
 use files::DroppedFile;
@@ -893,7 +893,6 @@ pub fn run() {
         }))
         .plugin(tauri_plugin_autostart::Builder::new()
             .app_name(preview_identity::IDENTIFIER)
-            .macos_launcher(MacosLauncher::LaunchAgent)
             .arg(AUTOSTART_ARG)
             .build());
     // Where no global shortcut can work, the plugin isn't even started.
