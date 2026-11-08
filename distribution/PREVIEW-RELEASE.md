@@ -1,5 +1,7 @@
 Independent community preview of Mochi Studio, based on Coucou by Louis Raillé.
 
+- Fix the persistent pale-blue oval at Windows startup: the edge indicator starts hidden and only appears for a valid drag target.
+- Native Windows startup checks confirm that the indicator exists and remains hidden before publication.
 - Customizable room, room styles, lighting, appearances and accessory combinations.
 - Own application name, version, identifiers, preferences, credentials and data paths. Installs alongside official Coucou.
 - Agent-hook installation, global shortcuts and automatic updates are disabled in this preview.

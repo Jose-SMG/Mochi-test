@@ -47,6 +47,8 @@ try {
     Start-Sleep -Seconds 3
     $App.Refresh(); if ($App.HasExited) { throw 'Preview did not stay running' }
     $Report.checks += 'native app runs with separate preferences'
+    & (Join-Path $PSScriptRoot 'qa-preview-startup-marker.ps1') -AppProcessId $App.Id
+    $Report.checks += 'edge indicator exists and stays hidden at cold start'
     $PreviewHook = Join-Path $env:LOCALAPPDATA 'MochiStudioPreview/bin/mochi-studio-preview-hook.exe'
     if (Test-Path $PreviewHook) { throw 'Disabled agent hook was installed' }
     $Report.checks += 'agent-hook installation disabled'

@@ -1,5 +1,11 @@
 # Mochi Studio Preview changelog
 
+## 0.1.0-beta.4
+
+- Keep the window-edge indicator natively hidden at startup instead of relying on an off-screen position.
+- Show it only after placing it at a valid edge while dragging; hide it when the target is cleared or placement fails.
+- Require an installed Windows startup visibility check before publishing installers.
+
 ## 0.1.0 — independent community preview
 
 - Separate app names, bundle identifiers, versions, data, credentials and IPC from official Coucou.

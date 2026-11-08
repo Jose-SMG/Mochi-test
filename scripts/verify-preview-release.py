@@ -41,6 +41,7 @@ for platform, folder, extensions in [('macOS','Mochi-Studio-Preview-macOS',{'.dm
 proof_path = incoming / 'Mochi-Studio-Preview-Windows/windows-coexistence.json'
 proof = json.loads(proof_path.read_text(encoding='utf-8-sig'))
 assert proof['passed'] is True and proof['source_commit'] == source
+assert 'edge indicator exists and stays hidden at cold start' in proof['checks']
 shutil.copy2(proof_path, output / proof_path.name)
 (output / 'SHA256SUMS.txt').write_text(''.join(f"{f['sha256']}  {f['name']}\n" for f in files))
 (output / 'release-manifest.json').write_text(json.dumps({'version':preview['version'],'source_commit':source,'source_repository':'Jose-SMG/Mochi-test','official_release':False,'platforms':platforms,'files':files},indent=2)+'\n')

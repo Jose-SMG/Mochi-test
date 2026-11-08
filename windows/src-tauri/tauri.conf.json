@@ -68,7 +68,7 @@
         "installerHooks": "nsis/hooks.nsh"
       },
       "wix": {
-        "version": "0.1.0.103"
+        "version": "0.1.0.104"
       }
     }
   }

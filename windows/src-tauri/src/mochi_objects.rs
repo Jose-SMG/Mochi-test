@@ -6,6 +6,7 @@ use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, WebviewUrl, Webv
 const IDS: [&str; 3] = ["cup", "cushion", "plant"];
 const SIDE: f64 = 92.0;
 const PARK: (i32,i32) = (-32000,-32000);
+const SNAP: &str = "mochi-snap";
 #[derive(Default)]
 struct Objects { syncing: Mutex<()>, listening: Mutex<BTreeSet<String>>, spots: Mutex<BTreeMap<String,[i32;2]>>, revision: AtomicU64 }
 fn spots_path() -> std::path::PathBuf { crate::platform::config_dir().join("mochi-object-positions.json") }
@@ -26,10 +27,10 @@ fn page(app: &AppHandle, query: &str) -> WebviewUrl {
 fn build(app: &AppHandle, id: &str, query: &str, size: (f64,f64)) -> Option<WebviewWindow> {
     if let Some(window) = app.get_webview_window(id) { return Some(window) }
     let window = WebviewWindowBuilder::new(app,id,page(app,query)).additional_browser_args(crate::BROWSER_ARGS)
-        .title("Mochi").inner_size(size.0,size.1).position(PARK.0 as f64,PARK.1 as f64).resizable(false)
+        .title(if id == SNAP { "Mochi edge indicator" } else { "Mochi" }).inner_size(size.0,size.1).position(PARK.0 as f64,PARK.1 as f64).resizable(false)
         .decorations(false).transparent(true).shadow(false).always_on_top(true).skip_taskbar(true)
         .visible_on_all_workspaces(true).focused(false).focusable(false).maximizable(false).minimizable(false)
-        .closable(false).disable_drag_drop_handler().visible(true).build().map_err(|e| crate::log::line(format!("Mochi object: {e}"))).ok()?;
+        .closable(false).disable_drag_drop_handler().visible(id != SNAP).build().map_err(|e| crate::log::line(format!("Mochi object: {e}"))).ok()?;
     // Windows may cascade a logical position outside every monitor. Park explicitly
     // in physical coordinates before an auxiliary overlay can be presented.
     let _ = window.set_position(PhysicalPosition::new(PARK.0, PARK.1));
@@ -39,7 +40,7 @@ pub fn setup(app: &AppHandle) {
     let state = Arc::new(Objects::default());
     if let Ok(text) = std::fs::read_to_string(spots_path()) { if text.len() < 2048 { if let Ok(mut spots) = serde_json::from_str::<BTreeMap<String,[i32;2]>>(&text) { spots.retain(|id,_| IDS.contains(&id.as_str()));*state.spots.lock().unwrap() = spots; } } }
     app.manage(state);
-    if let Some(window)=build(app,"mochi-snap","kind=snap",(96.0,8.0)) { crate::platform::set_click_through(&window,true);crate::webview_memory::set_low(&window,true); }
+    if let Some(window)=build(app,SNAP,"kind=snap",(96.0,8.0)) { crate::platform::set_click_through(&window,true);crate::webview_memory::set_low(&window,true); }
     // Pre-create overlays before the island, like the official desktop window.
     for id in IDS { if let Some(window)=build(app,&label(id),&format!("kind=prop&id={id}"),(SIDE,SIDE)) { crate::webview_memory::set_low(&window,true); } }
     sync(app);
@@ -86,9 +87,26 @@ fn sync_now(app: &AppHandle) {
     }
 }
 pub fn snap(app: &AppHandle, point: Option<((f64,f64),f64)>) {
-    let Some(window)=app.get_webview_window("mochi-snap") else {return};
-    if let Some(((x,y),scale))=point {let _=window.set_size(PhysicalSize::new((96.0*scale) as u32,(8.0*scale) as u32));let _=window.set_position(PhysicalPosition::new((x-48.0*scale) as i32,(y-4.0*scale) as i32));}
-    else {let _=window.set_position(PhysicalPosition::new(PARK.0,PARK.1));}
+    let Some(window)=app.get_webview_window(SNAP) else {return};
+    if let Some(((x,y),scale))=point {
+        // Position before showing: Windows may relocate an off-screen window at
+        // creation. Parking alone is not a visibility guarantee at cold start.
+        let placed=window.set_size(PhysicalSize::new((96.0*scale) as u32,(8.0*scale) as u32))
+            .and_then(|_|window.set_position(PhysicalPosition::new((x-48.0*scale) as i32,(y-4.0*scale) as i32)));
+        if placed.is_ok() {
+            if !window.is_visible().unwrap_or(false) {
+                crate::webview_memory::set_low(&window,false);
+                let _=window.show();
+            }
+            return;
+        }
+    }
+    // No valid edge (or failed placement): never leave a stale marker visible.
+    if window.is_visible().unwrap_or(true) {
+        let _=window.hide();
+        crate::webview_memory::set_low(&window,true);
+    }
+    let _=window.set_position(PhysicalPosition::new(PARK.0,PARK.1));
 }
 #[tauri::command]
 pub fn put_away_mochi_prop(app: AppHandle, id: String) {

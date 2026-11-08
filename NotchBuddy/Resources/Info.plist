@@ -38,9 +38,9 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>103</string>
+	<string>104</string>
 	<key>MochiPreviewVersion</key>
-	<string>0.1.0-beta.3</string>
+	<string>0.1.0-beta.4</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSAccessibilityUsageDescription</key>

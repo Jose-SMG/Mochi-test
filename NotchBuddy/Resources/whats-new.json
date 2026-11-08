@@ -42,6 +42,45 @@
             "ko": "별도 설정을 사용하는 Mochi의 방과 스타일. 에이전트 훅과 자동 업데이트는 꺼져 있습니다.",
             "ja": "専用設定を使う Mochi の部屋とスタイル。エージェントフックと自動更新は無効です。"
           }
+        },
+        {
+          "icon": "bug",
+          "title": {
+            "en": "Clean startup",
+            "fr": "Démarrage sans indicateur",
+            "es": "Inicio sin el óvalo",
+            "pt-BR": "Inicialização sem indicador",
+            "ru": "Запуск без индикатора",
+            "zh-Hans": "启动时隐藏提示",
+            "hi": "साफ़ शुरुआत",
+            "ar": "بدء بلا مؤشر",
+            "bn": "পরিষ্কার শুরু",
+            "id": "Mulai tanpa indikator",
+            "de": "Start ohne Kantenanzeige",
+            "tr": "Temiz başlangıç",
+            "th": "เริ่มต้นโดยไม่มีตัวบอกขอบ",
+            "zh-Hant": "啟動時隱藏提示",
+            "ko": "깔끔한 시작",
+            "ja": "起動時の表示を修正"
+          },
+          "detail": {
+            "en": "The window-edge indicator stays hidden at startup and appears only near a valid edge while dragging Mochi.",
+            "fr": "L’indicateur reste masqué au démarrage et apparaît près d’un bord valide en déplaçant Mochi.",
+            "es": "El indicador empieza oculto y solo aparece cerca de un borde válido al arrastrar a Mochi.",
+            "pt-BR": "O indicador começa oculto e só aparece perto de uma borda válida ao arrastar Mochi.",
+            "ru": "Индикатор скрыт при запуске и появляется у подходящего края при перетаскивании Mochi.",
+            "zh-Hans": "窗口边缘提示在启动时保持隐藏，仅在拖动 Mochi 靠近有效边缘时显示。",
+            "hi": "किनारे का संकेत शुरुआत में छिपा रहता है और Mochi को सही किनारे तक खींचने पर दिखता है।",
+            "ar": "يبقى مؤشر الحافة مخفياً عند البدء ويظهر قرب حافة صالحة عند سحب Mochi.",
+            "bn": "শুরুতে প্রান্তের চিহ্ন লুকানো থাকে। Mochi-কে উপযুক্ত প্রান্তের কাছে টানলেই এটি দেখা যায়।",
+            "id": "Indikator tersembunyi saat mulai dan hanya muncul di dekat tepi yang sesuai saat menyeret Mochi.",
+            "de": "Die Kantenanzeige bleibt beim Start verborgen und erscheint beim Ziehen von Mochi an passende Kanten.",
+            "tr": "Kenar göstergesi açılışta gizlenir ve Mochi sürüklenirken uygun bir kenarın yakınında görünür.",
+            "th": "ตัวบอกขอบซ่อนอยู่เมื่อเริ่ม และจะแสดงเมื่อลาก Mochi ไปใกล้ขอบที่ใช้ได้",
+            "zh-Hant": "視窗邊緣提示在啟動時保持隱藏，僅在拖動 Mochi 靠近有效邊緣時顯示。",
+            "ko": "가장자리 표시는 시작할 때 숨겨지고 Mochi를 유효한 가장자리 근처로 끌 때만 나타납니다.",
+            "ja": "ウィンドウ端の目印は起動時には非表示となり、Mochi を有効な端へドラッグすると表示されます。"
+          }
         }
       ]
     }
