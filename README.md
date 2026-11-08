@@ -4,7 +4,7 @@
 
 **Coucou: room, appearances and window-edge attachment.**
 
-**Independent community preview:** own app name, identifiers, version and data. The earlier preview that shared Coucou’s identity has been withdrawn. Agent hooks, global shortcuts and automatic updates are disabled. New installers are published only after both native builds and isolation checks pass.
+**Independent community build:** separate identifiers, version and data. The earlier preview that shared Coucou’s identity has been withdrawn. Agent hooks, global shortcuts and automatic updates are disabled. New installers are published only after both native builds and isolation checks pass.
 
 **A room to make your own. A look to keep. A companion for your desktop.**
 
@@ -93,9 +93,9 @@ The room and native interaction work remain part of this independent project. Th
 
 ## Validation and provenance
 
-**Published build:** `0.1.1-beta.1`, built from `896155a5e727b7ca706f000ef4a8875fa204eee9` in [the successful native build](https://github.com/Jose-SMG/Mochi-test/actions/runs/42527134423). [Published source and artifact manifest](distribution/published-preview-manifest.json) · [Windows coexistence result](distribution/windows-coexistence.json).
+**Published build:** `0.1.2-beta.1`, built from `ae695a41ade5711db568159bff7d29017c71885b` in [the successful native build](https://github.com/Jose-SMG/Mochi-test/actions/runs/42535359515). [Published source and artifact manifest](distribution/published-preview-manifest.json) · [Windows coexistence result](distribution/windows-coexistence.json).
 
-The installers workflow builds both native platforms directly from this repository. Release manifests identify the source commit, repository, independent app identifier and artifact hashes. Publishing requires both builds, isolation checks, native edge-selection tests and a Windows NSIS EXE install/start/uninstall coexistence check and native startup marker visibility, visible app name and retained room/appearance preference checks to pass. Full native drag/follow/jump validation is still pending.
+The installers workflow builds both native platforms directly from this repository. Release manifests identify the source commit, repository, independent app identifier and artifact hashes. Publishing requires both builds, isolation checks, native edge-selection tests and a Windows NSIS EXE install/start/uninstall coexistence check and native startup marker visibility, exact product/executable/shortcut names, an upgrade from the previous installer and retained room/appearance preference checks to pass. Full native drag/follow/jump validation is still pending.
 
 Previous copied installers are withdrawn; the import workflow is disabled by its retirement guard. See [the isolation changes](docs/mochi/INDEPENDENT-PREVIEW.md).
 

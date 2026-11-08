@@ -2,14 +2,14 @@
 
 # Preview status and known limitations
 
-## Current community build: 0.1.1-beta.1
+## Current community build: 0.1.2-beta.1
 
-[Both native builds and the source-verified publication passed](https://github.com/Jose-SMG/Mochi-test/actions/runs/42527134423), from `896155a5e727b7ca706f000ef4a8875fa204eee9`.
+[Both native builds and the source-verified publication passed](https://github.com/Jose-SMG/Mochi-test/actions/runs/42535359515), from `ae695a41ade5711db568159bff7d29017c71885b`.
 
 - Universal macOS bundle: own identifier/version, bundled scene checks, real WebKit rendering/PNG export, ad-hoc signature and DMG verification.
 - Windows: 620 app tests and 36 relay tests passed (7 app tests ignored); EXE, MSI and portable ZIP compiled. Native edge-selection tests passed.
 - The actual NSIS EXE was installed, launched with separate preferences, and uninstalled in CI. The preview executable was removed and all six official Coucou/Claude sentinel files kept their hashes. [Result](../../distribution/windows-coexistence.json).
-- The actual app window title is Coucou; the installer is registered as Coucou Community 0.1.1. Room and appearance preferences survive uninstalling this build. The app retains the former preview settings directory.
+- The app, installer, executable and Start menu shortcut use exactly Coucou. Windows CI upgrades the previously published installer, verifies the old executable/shortcut are replaced, and checks original application and startup registry values are unchanged. Room and appearance preferences survive uninstalling this build. The app retains the former preview settings directory.
 - The native edge indicator exists and remains hidden during cold startup, verified through Windows HWND visibility inspection.
 - Both installers' public download URLs returned HTTP 200. The published artifact sizes and GitHub SHA-256 digests match the [source-build manifest](../../distribution/published-preview-manifest.json).
 

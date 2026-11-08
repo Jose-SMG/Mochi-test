@@ -1,16 +1,20 @@
 {
-  "product": "Coucou Community",
+  "product": "Coucou",
+  "source_commit": "ae695a41ade5711db568159bff7d29017c71885b",
   "passed": true,
-  "source_commit": "896155a5e727b7ca706f000ef4a8875fa204eee9",
   "checks": [
     "independent executable installed",
-    "Coucou Community installer name and version registered",
+    "Coucou installer name and version registered",
+    "upgrade replaces the previous executable and shortcut while retaining preferences",
+    "executable and Start menu shortcut are named Coucou",
     "native app runs with separate preferences",
     "edge indicator exists and stays hidden at cold start",
     "native app window title is Coucou",
+    "startup registration retains its independent identity",
     "agent-hook installation disabled",
     "independent preview executable actually removed",
     "room and appearance preferences survive uninstall",
-    "all six official app, data and Claude hook sentinels unchanged"
+    "all six official app, data and Claude hook sentinels unchanged",
+    "official application and startup registry values unchanged"
   ]
 }

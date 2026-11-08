@@ -4,12 +4,12 @@ Louis’s November 7 review asks for independent builds, reproducible provenance
 
 | Scope | Preview |
 | --- | --- |
-| Application | Coucou Community 0.1.1 beta 1 |
+| Application | Coucou 0.1.2 beta 1 |
 | Visible title and tray | Coucou |
 | Bundle identifiers, both platforms | io.github.jose-smg.mochistudio.preview |
 | Mac support and log directories | MochiStudioPreview |
 | Windows roaming/local data | MochiStudioPreview |
-| Windows executable | mochi-studio-preview.exe |
+| Windows executable | Coucou.exe |
 | Windows credential service | independent bundle identifier |
 | Windows relay/pipe | mochi-studio-preview-hook / mochi-studio-preview-SID |
 | Agent-hook writes/removals | disabled at public mutation entry points |
@@ -22,4 +22,4 @@ No migration from official Coucou is performed. Tests do not establish full drag
 
 The Three.js room stays here. An upstream contribution should contain one Canvas-only accessory feature, no room, WebView, dependency or identity change, and account for wardrobe PRs #1025/#737/#738.
 
-The app name changed at the user’s request. Installer namespaces, settings and credentials remain independent from official Coucou. On Windows, close and uninstall the old Coucou and Mochi Studio Preview before installing Coucou Community if you want one launcher. The preview uninstaller preserves room and appearance preferences; CI verifies that retention.
+The app, installer, executable and shortcut names are exactly Coucou, as requested. The bundle identifier, saved settings and credential namespace remain independent from the official installation. The NSIS registry key and MSI upgrade GUID are retained so the previously published installer upgrades correctly. Windows CI verifies the actual upgrade, exact names, preference retention, startup registration, and preservation of official app files and registry values.
