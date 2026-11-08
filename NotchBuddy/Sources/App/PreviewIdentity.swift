@@ -2,7 +2,7 @@ import Foundation
 
 /// Independent community builds must never own Coucou's settings, hooks or updater.
 enum PreviewIdentity {
-    static let name = "Mochi Studio Preview"
+    static let name = "Coucou"
     static let bundleIdentifier = "io.github.jose-smg.mochistudio.preview"
     static let supportDirectory = "MochiStudioPreview"
     static let agentHooksEnabled = false

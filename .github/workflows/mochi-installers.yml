@@ -1,4 +1,4 @@
-name: Mochi Studio Preview installers
+name: Coucou Community installers
 
 on:
   push:
@@ -81,6 +81,7 @@ jobs:
           key: mochi-preview-windows-${{ hashFiles('windows/Cargo.lock') }}-${{ github.sha }}
           restore-keys: |
             mochi-preview-windows-${{ hashFiles('windows/Cargo.lock') }}-
+            mochi-preview-windows-
             mochi-installers-windows-${{ hashFiles('windows/Cargo.lock') }}-
             mochi-installers-windows-
       - shell: pwsh

@@ -13,7 +13,7 @@ public static class PreviewMarkerWindows {
     [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(IntPtr window, out uint process);
     [DllImport("user32.dll", CharSet=CharSet.Unicode)] private static extern int GetWindowText(IntPtr window, StringBuilder text, int length);
     [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr window);
-    public static bool[] Find(int process) {
+    public static bool[] Find(int process, string expectedTitle) {
         var result = new List<bool>();
         EnumWindows((window, data) => {
             uint owner;
@@ -21,7 +21,7 @@ public static class PreviewMarkerWindows {
             if (owner != process) return true;
             var title = new StringBuilder(256);
             GetWindowText(window, title, title.Capacity);
-            if (title.ToString() == "Mochi edge indicator") result.Add(IsWindowVisible(window));
+            if (title.ToString() == expectedTitle) result.Add(IsWindowVisible(window));
             return true;
         }, IntPtr.Zero);
         return result.ToArray();
@@ -30,14 +30,17 @@ public static class PreviewMarkerWindows {
 '@
 $Deadline = (Get-Date).AddSeconds(30)
 do {
-    $Markers = @([PreviewMarkerWindows]::Find($AppProcessId))
+    $Markers = @([PreviewMarkerWindows]::Find($AppProcessId, 'Mochi edge indicator'))
     if ($Markers.Count -gt 0) { break }
     Start-Sleep -Milliseconds 200
 } while ((Get-Date) -lt $Deadline)
 if ($Markers.Count -ne 1) { throw "Expected one native edge indicator after startup, found $($Markers.Count)" }
 for ($Sample = 0; $Sample -lt 20; $Sample++) {
-    $Markers = @([PreviewMarkerWindows]::Find($AppProcessId))
+    $Markers = @([PreviewMarkerWindows]::Find($AppProcessId, 'Mochi edge indicator'))
     if ($Markers.Count -ne 1 -or $Markers[0]) { throw 'Edge indicator must remain natively hidden until a valid drag target exists' }
     Start-Sleep -Milliseconds 100
 }
+$Branded = @([PreviewMarkerWindows]::Find($AppProcessId, 'Coucou'))
+if ($Branded.Count -lt 1) { throw 'The installed app must expose the requested Coucou window title' }
 Write-Host 'Native edge indicator exists and stays hidden at cold start.'
+Write-Host 'Native application window title is Coucou.'

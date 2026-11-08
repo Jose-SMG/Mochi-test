@@ -1,5 +1,5 @@
 //! Shared by the preview app and relay; separate from the official Coucou namespace.
-pub const NAME: &str = "Mochi Studio Preview";
+pub const NAME: &str = "Coucou";
 pub const IDENTIFIER: &str = "io.github.jose-smg.mochistudio.preview";
 pub const DATA_DIRECTORY: &str = "MochiStudioPreview";
 pub const APP_BINARY: &str = "mochi-studio-preview";

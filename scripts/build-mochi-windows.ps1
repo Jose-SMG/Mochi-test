@@ -40,7 +40,7 @@ try {
             $Suffix = if ($Kind -eq 'nsis') { '*-setup.exe' } else { '*.msi' }
             $Files = @(Get-ChildItem -Path "target/release/bundle/$Kind/$Suffix" -File)
             if ($Files.Count -ne 1) { throw "Expected exactly one $Kind installer, got $($Files.Count)" }
-            $Name = if ($Kind -eq 'nsis') { "Mochi-Studio-Preview-$Version-Windows-x64-setup.exe" } else { "Mochi-Studio-Preview-$Version-Windows-x64.msi" }
+            $Name = if ($Kind -eq 'nsis') { "Coucou-Community-$Version-Windows-x64-setup.exe" } else { "Coucou-Community-$Version-Windows-x64.msi" }
             Copy-Item -LiteralPath $Files[0].FullName -Destination (Join-Path $OutDir $Name) -Force
         }
         # A portable pair is useful for checking the app without installing it.
@@ -49,7 +49,7 @@ try {
         New-Item -ItemType Directory -Path $Portable -Force | Out-Null
         Copy-Item target/release/mochi-studio-preview.exe,target/release/mochi-studio-preview-hook.exe -Destination $Portable -Force
         Get-ChildItem target/release/*.dll -ErrorAction SilentlyContinue | Copy-Item -Destination $Portable -Force
-        Compress-Archive -Path "$Portable/*" -DestinationPath (Join-Path $OutDir "Mochi-Studio-Preview-$Version-Windows-x64-portable.zip") -Force
+        Compress-Archive -Path "$Portable/*" -DestinationPath (Join-Path $OutDir "Coucou-Community-$Version-Windows-x64-portable.zip") -Force
     } finally { Pop-Location }
     $SignatureStatus = 'unsigned'
     if ($env:MOCHI_WINDOWS_CERT_THUMBPRINT) {

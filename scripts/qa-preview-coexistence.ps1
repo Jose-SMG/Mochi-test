@@ -24,7 +24,7 @@ foreach ($Path in $Official) {
 }
 $Hashes = @{}; foreach ($Path in $Official) { $Hashes[$Path] = (Get-FileHash $Path).Hash }
 $OldProfile = $env:USERPROFILE; $OldAppData = $env:APPDATA
-$Report = @{passed=$false; source_commit=$env:GITHUB_SHA; product='Mochi Studio Preview'; checks=@()}
+$Report = @{passed=$false; source_commit=$env:GITHUB_SHA; product='Coucou Community'; checks=@()}
 try {
     $env:USERPROFILE=$FakeHome; $env:APPDATA=$FakeRoaming
     # Keep LOCALAPPDATA unchanged so the runner's WebView2 runtime can be found.
@@ -33,11 +33,15 @@ try {
     $Exe = Join-Path $Target 'mochi-studio-preview.exe'
     if (-not (Test-Path $Exe)) { throw "Preview executable not installed at $Exe" }
     $Report.checks += 'independent executable installed'
+    $Registration = Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Coucou Community'
+    $Metadata = Get-Content (Join-Path $PSScriptRoot '../mochi-preview.json') -Raw | ConvertFrom-Json
+    if ($Registration.DisplayName -ne $Metadata.product_name -or $Registration.DisplayVersion -ne $Metadata.application_version) { throw 'Installer name or registered version is incorrect' }
+    $Report.checks += 'Coucou Community installer name and version registered'
     # NSIS may start the application; shut down only this installation before the explicit launch.
     Get-Process mochi-studio-preview -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $Exe } | Stop-Process -Force
     $Settings = Join-Path $FakeRoaming 'MochiStudioPreview/settings.json'
     New-Item -ItemType Directory (Split-Path -Parent $Settings) -Force | Out-Null
-    '{"language":"en","autostart":false}' | Set-Content $Settings -Encoding utf8
+    '{"language":"en","autostart":false,"mochiSkin":"diamond","mochiStudio":"{\"roomStyle\":\"gamer\",\"desktopProps\":[]}"}' | Set-Content $Settings -Encoding utf8
     $Log = Join-Path $env:LOCALAPPDATA 'MochiStudioPreview/mochi-studio-preview.log'
     $App = Start-Process $Exe -PassThru
     $Deadline = (Get-Date).AddSeconds(90)
@@ -49,6 +53,7 @@ try {
     $Report.checks += 'native app runs with separate preferences'
     & (Join-Path $PSScriptRoot 'qa-preview-startup-marker.ps1') -AppProcessId $App.Id
     $Report.checks += 'edge indicator exists and stays hidden at cold start'
+    $Report.checks += 'native app window title is Coucou'
     $PreviewHook = Join-Path $env:LOCALAPPDATA 'MochiStudioPreview/bin/mochi-studio-preview-hook.exe'
     if (Test-Path $PreviewHook) { throw 'Disabled agent hook was installed' }
     $Report.checks += 'agent-hook installation disabled'
@@ -63,6 +68,9 @@ try {
     while ((Test-Path $Exe) -and (Get-Date) -lt $Deadline) { Start-Sleep -Milliseconds 250 }
     if (Test-Path $Exe) { throw 'Preview executable still exists after uninstall' }
     $Report.checks += 'independent preview executable actually removed'
+    $Saved = Get-Content $Settings -Raw | ConvertFrom-Json
+    if ($Saved.mochiSkin -ne 'diamond' -or ($Saved.mochiStudio | ConvertFrom-Json).roomStyle -ne 'gamer') { throw 'Removing the old preview must preserve room and appearance preferences' }
+    $Report.checks += 'room and appearance preferences survive uninstall'
     foreach ($Path in $Official) {
         if (-not (Test-Path $Path) -or (Get-FileHash $Path).Hash -ne $Hashes[$Path]) { throw "Official file changed: $Path" }
     }

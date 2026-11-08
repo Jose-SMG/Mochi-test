@@ -4,11 +4,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 [[ "$(uname -s)" == Darwin ]] || { echo 'Requires macOS and Xcode.' >&2; exit 1; }
 bash "$ROOT/scripts/build-mochi-macos.sh"
-APP="$ROOT/build/mochi-xcode/Build/Products/Debug/Mochi Studio Preview.app"
+APP="$ROOT/build/mochi-xcode/Build/Products/Debug/Coucou Community.app"
 ID=io.github.jose-smg.mochistudio.preview
 ACTUAL=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist")
 [[ "$ACTUAL" == "$ID" ]] || { echo 'Unexpected bundle identifier.' >&2; exit 1; }
-TARGET="$HOME/Applications/Mochi Studio Preview.app"
+TARGET="$HOME/Applications/Coucou Community.app"
 if [[ -e "$TARGET" ]]; then
   EXISTING=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$TARGET/Contents/Info.plist")
   [[ "$EXISTING" == "$ID" ]] || { echo 'Destination belongs to another application.' >&2; exit 1; }

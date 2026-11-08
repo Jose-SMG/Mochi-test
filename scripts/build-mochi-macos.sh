@@ -31,11 +31,11 @@ xcodebuild -project NotchBuddy/NotchBuddy.xcodeproj -scheme NotchBuddy \
   -configuration Debug -destination 'generic/platform=macOS' -derivedDataPath "$DERIVED" \
   ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO SWIFT_OPTIMIZATION_LEVEL=-O \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
-APP="$DERIVED/Build/Products/Debug/Mochi Studio Preview.app"
-test -x "$APP/Contents/MacOS/Mochi Studio Preview"
-lipo "$APP/Contents/MacOS/Mochi Studio Preview" -verify_arch arm64 x86_64
+APP="$DERIVED/Build/Products/Debug/Coucou Community.app"
+test -x "$APP/Contents/MacOS/Coucou Community"
+lipo "$APP/Contents/MacOS/Coucou Community" -verify_arch arm64 x86_64
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist")" == io.github.jose-smg.mochistudio.preview ]]
-[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")" == 0.1.0 ]]
+[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")" == "$(node -p 'require("./mochi-preview.json").application_version')" ]]
 swiftc NotchBuddy/Sources/App/PreviewIdentity.swift tests/PreviewIdentityTests.swift -o "$OUT/preview-identity-tests"
 "$OUT/preview-identity-tests"
 rm "$OUT/preview-identity-tests"
@@ -57,12 +57,12 @@ STAGE="$(mktemp -d "${TMPDIR:-/tmp}/mochi-studio-preview-dmg.XXXXXX")"
 MOUNT="$(mktemp -d "${TMPDIR:-/tmp}/mochi-studio-preview-mount.XXXXXX")"
 cleanup() { hdiutil detach "$MOUNT" >/dev/null 2>&1 || true; rm -rf "$STAGE" "$MOUNT"; }
 trap cleanup EXIT
-ditto "$APP" "$STAGE/Mochi Studio Preview.app"
+ditto "$APP" "$STAGE/Coucou Community.app"
 ln -s /Applications "$STAGE/Applications"
 cat > "$STAGE/LEEME.txt" <<'EOF'
-Mochi Studio Preview · comunidad
+Coucou Community · comunidad
 
-Arrastra Mochi Studio Preview a Aplicaciones. Requiere macOS 15 o posterior.
+Arrastra Coucou Community a Aplicaciones. Requiere macOS 15 o posterior.
 Incluye Mochi Studio: habitación editable, conjuntos, materiales y fotos PNG.
 Arrastra Mochi al borde superior de una ventana y suéltalo para que se enganche.
 No necesita combinaciones de teclas.
@@ -71,8 +71,8 @@ Beta de la comunidad. Consulta signature-status.json para conocer su firma.
 No es una release oficial de Coucou. Usa identificadores y ajustes propios.
 La instalación de hooks y las actualizaciones automáticas están desactivadas.
 EOF
-DMG="$OUT/Mochi-Studio-Preview-$VERSION-macOS-universal.dmg"
-hdiutil create -volname 'Mochi Studio Preview' -srcfolder "$STAGE" -format UDZO -ov "$DMG"
+DMG="$OUT/Coucou-Community-$VERSION-macOS-universal.dmg"
+hdiutil create -volname 'Coucou Community' -srcfolder "$STAGE" -format UDZO -ov "$DMG"
 SIGNATURE='ad-hoc; not notarized'
 if [[ -n "${MOCHI_MAC_SIGN_IDENTITY:-}" ]]; then
   SIGNATURE='Developer ID; not notarized'
@@ -87,7 +87,7 @@ fi
 node -e 'require("node:fs").writeFileSync(process.argv[1],JSON.stringify({status:process.argv[2]})+"\n")' "$OUT/signature-status.json" "$SIGNATURE"
 hdiutil verify "$DMG"
 hdiutil attach -nobrowse -readonly -mountpoint "$MOUNT" "$DMG"
-node scripts/test-mochi-resources.mjs "$MOUNT/Mochi Studio Preview.app/Contents/Resources/mochi-scenes"
-codesign --verify --deep --strict "$MOUNT/Mochi Studio Preview.app"
+node scripts/test-mochi-resources.mjs "$MOUNT/Coucou Community.app/Contents/Resources/mochi-scenes"
+codesign --verify --deep --strict "$MOUNT/Coucou Community.app"
 node scripts/write-mochi-build-manifest.mjs "$OUT" macOS universal
 echo "Installer: $DMG"

@@ -18,7 +18,7 @@ const artifacts = files.sort().map(name => {
 const signaturePath = resolve(output, 'signature-status.json');
 let signature = platform === 'macOS' ? 'ad-hoc; not notarized' : 'unsigned';
 try { signature = JSON.parse(readFileSync(signaturePath, 'utf8')).status; } catch {}
-const manifest = { product: preview.product_name, identifier: preview.identifier, data_directory: preview.data_directory, agent_hooks_enabled: false, automatic_updates_enabled: false, source_repository: 'Jose-SMG/Mochi-test', channel: 'independent community preview', version: preview.version, official_release: false, features: ['home', 'perch'],
+const manifest = { product: preview.product_name, display_name: preview.display_name, identifier: preview.identifier, data_directory: preview.data_directory, agent_hooks_enabled: false, automatic_updates_enabled: false, source_repository: 'Jose-SMG/Mochi-test', channel: 'independent community preview', version: preview.version, official_release: false, features: ['home', 'perch'],
   source_commit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
   source_base: 'b1bc09de7f7c24a80bd8eca5729b8bee60f66402', platform, architecture,
   signature, artifacts };

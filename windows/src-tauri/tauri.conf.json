@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Mochi Studio Preview",
-  "version": "0.1.0",
+  "productName": "Coucou Community",
+  "version": "0.1.1",
   "identifier": "io.github.jose-smg.mochistudio.preview",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -18,7 +18,7 @@
     "windows": [
       {
         "label": "island",
-        "title": "Mochi Studio Preview",
+        "title": "Coucou",
         "url": "index.html",
         "width": 240,
         "height": 6,
@@ -54,10 +54,10 @@
     "resources": {
       "../target/release/mochi-studio-preview-hook.exe": "mochi-studio-preview-hook.exe"
     },
-    "copyright": "\u00a9 Louis Raille",
+    "copyright": "© Louis Raille",
     "category": "DeveloperTool",
-    "shortDescription": "Independent Mochi Studio community preview",
-    "longDescription": "An independent community preview with a customizable room and appearances for Mochi. Based on Coucou by Louis Raill\u00e9. Agent-hook installation and automatic updates are disabled.",
+    "shortDescription": "Coucou community build with a customizable room",
+    "longDescription": "Community build of Coucou with a customizable room and appearances for Mochi. Based on Coucou by Louis Raillé, with separate settings. Agent-hook installation and automatic updates are disabled.",
     "windows": {
       "nsis": {
         "installMode": "currentUser",
@@ -68,7 +68,8 @@
         "installerHooks": "nsis/hooks.nsh"
       },
       "wix": {
-        "version": "0.1.0.104"
+        "version": "0.1.1.105",
+        "upgradeCode": "13438c9a-7818-5d98-838b-49ce80db1008"
       }
     }
   }

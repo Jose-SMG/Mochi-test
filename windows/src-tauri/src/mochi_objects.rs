@@ -92,7 +92,8 @@ pub fn snap(app: &AppHandle, point: Option<((f64,f64),f64)>) {
         // Position before showing: Windows may relocate an off-screen window at
         // creation. Parking alone is not a visibility guarantee at cold start.
         let placed=window.set_size(PhysicalSize::new((96.0*scale) as u32,(8.0*scale) as u32))
-            .and_then(|_|window.set_position(PhysicalPosition::new((x-48.0*scale) as i32,(y-4.0*scale) as i32)));
+            .and_then(|_|window.set_position(PhysicalPosition::new((x-48.0*scale) as i32,(y-4.0*scale) as i32)))
+            .and_then(|_|window.eval("document.documentElement.dataset.snapActive = 'true'"));
         if placed.is_ok() {
             if !window.is_visible().unwrap_or(false) {
                 crate::webview_memory::set_low(&window,false);
@@ -102,6 +103,9 @@ pub fn snap(app: &AppHandle, point: Option<((f64,f64),f64)>) {
         }
     }
     // No valid edge (or failed placement): never leave a stale marker visible.
+    // Clear the drawing as well as hiding the HWND: a surfaced auxiliary
+    // WebView must remain transparent until a drag explicitly enables it.
+    let _=window.eval("delete document.documentElement.dataset.snapActive");
     if window.is_visible().unwrap_or(true) {
         let _=window.hide();
         crate::webview_memory::set_low(&window,true);

@@ -1,4 +1,12 @@
-# Mochi Studio Preview changelog
+# Coucou Community changelog
+
+## 0.1.1-beta.1
+
+- Use Coucou in the application title and tray, and Coucou Community for the installer and launcher.
+- Preserve the preview’s settings, credentials and application identifiers; keep the previous MSI upgrade identity.
+- Keep the edge marker drawing empty until an active drag enables it, even if its auxiliary window surfaces.
+- Verify that room and appearance preferences survive uninstalling the old preview before replacing it.
+
 
 ## 0.1.0-beta.4
 
