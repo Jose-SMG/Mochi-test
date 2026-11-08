@@ -2,7 +2,7 @@
 pub const NAME: &str = "Coucou";
 pub const IDENTIFIER: &str = "io.github.jose-smg.mochistudio.preview";
 pub const DATA_DIRECTORY: &str = "MochiStudioPreview";
-pub const APP_BINARY: &str = "mochi-studio-preview";
+pub const APP_BINARY: &str = "Coucou";
 pub const HOOK_MARKER: &str = "mochi-studio-preview-hook";
 pub const PIPE_PREFIX: &str = "mochi-studio-preview";
 pub const AGENT_HOOKS_ENABLED: bool = false;
@@ -11,7 +11,7 @@ pub const GLOBAL_SHORTCUTS_ENABLED: bool = false;
 
 pub fn require_agent_hooks() -> Result<(), String> {
     if AGENT_HOOKS_ENABLED { Ok(()) } else {
-        Err("Agent hook installation is disabled in Mochi Studio Preview. Your Coucou and coding-agent settings are left unchanged.".into())
+        Err("Agent hook installation is disabled in this Coucou build. Your Coucou and coding-agent settings are left unchanged.".into())
     }
 }
 

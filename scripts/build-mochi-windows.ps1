@@ -40,21 +40,21 @@ try {
             $Suffix = if ($Kind -eq 'nsis') { '*-setup.exe' } else { '*.msi' }
             $Files = @(Get-ChildItem -Path "target/release/bundle/$Kind/$Suffix" -File)
             if ($Files.Count -ne 1) { throw "Expected exactly one $Kind installer, got $($Files.Count)" }
-            $Name = if ($Kind -eq 'nsis') { "Coucou-Community-$Version-Windows-x64-setup.exe" } else { "Coucou-Community-$Version-Windows-x64.msi" }
+            $Name = if ($Kind -eq 'nsis') { "Coucou-$Version-Windows-x64-setup.exe" } else { "Coucou-$Version-Windows-x64.msi" }
             Copy-Item -LiteralPath $Files[0].FullName -Destination (Join-Path $OutDir $Name) -Force
         }
         # A portable pair is useful for checking the app without installing it.
         $Portable = Join-Path $OutDir 'portable'
         if (Test-Path $Portable) { Remove-Item $Portable -Recurse -Force }
         New-Item -ItemType Directory -Path $Portable -Force | Out-Null
-        Copy-Item target/release/mochi-studio-preview.exe,target/release/mochi-studio-preview-hook.exe -Destination $Portable -Force
+        Copy-Item target/release/Coucou.exe,target/release/mochi-studio-preview-hook.exe -Destination $Portable -Force
         Get-ChildItem target/release/*.dll -ErrorAction SilentlyContinue | Copy-Item -Destination $Portable -Force
-        Compress-Archive -Path "$Portable/*" -DestinationPath (Join-Path $OutDir "Coucou-Community-$Version-Windows-x64-portable.zip") -Force
+        Compress-Archive -Path "$Portable/*" -DestinationPath (Join-Path $OutDir "Coucou-$Version-Windows-x64-portable.zip") -Force
     } finally { Pop-Location }
     $SignatureStatus = 'unsigned'
     if ($env:MOCHI_WINDOWS_CERT_THUMBPRINT) {
         $ToVerify = @(Get-ChildItem $OutDir -File | Where-Object { $_.Extension -in '.exe', '.msi' })
-        $ToVerify += Get-Item (Join-Path $Root 'windows/target/release/mochi-studio-preview.exe')
+        $ToVerify += Get-Item (Join-Path $Root 'windows/target/release/Coucou.exe')
         foreach ($File in $ToVerify) {
             $Signature = Get-AuthenticodeSignature $File.FullName
             if ($Signature.Status -ne 'Valid') { throw "Signature validation failed for $($File.Name): $($Signature.Status)" }

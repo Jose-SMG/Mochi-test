@@ -1,4 +1,4 @@
-name: Coucou Community installers
+name: Coucou installers
 
 on:
   push:

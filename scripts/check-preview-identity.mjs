@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 const read = p => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const metadata = JSON.parse(read('mochi-preview.json'));
 const tauri = JSON.parse(read('windows/src-tauri/tauri.conf.json'));
-assert.equal(metadata.product_name, 'Coucou Community');
+assert.equal(metadata.product_name, 'Coucou');
 assert.equal(metadata.display_name, 'Coucou');
 assert.equal(metadata.official_release, false);
 assert.notEqual(metadata.identifier, 'fr.louisraille.coucou');
@@ -33,7 +33,7 @@ const uninstaller = read('windows/src-tauri/nsis/hooks.nsh');
 for (const line of uninstaller.split('\n').filter(l => /^\s*(RMDir|Delete)\b/.test(l))) {
   assert(line.includes('$LOCALAPPDATA\\MochiStudioPreview\\'), `Unsafe removal: ${line}`);
 }
-assert(!read('scripts/dev-install.sh').includes('/Applications/Coucou.app'));
+assert(read('scripts/dev-install.sh').includes('[[ "$EXISTING" == "$ID" ]]'));
 assert(!read('scripts/dev-install.sh').includes('pkill -x Coucou'));
 assert(read('NotchBuddy/Sources/App/ClaudeService.swift').includes(`static let service = "${metadata.identifier}"`));
 assert(read('windows/src-tauri/src/secrets.rs').includes('preview_identity::IDENTIFIER'));
@@ -41,3 +41,12 @@ assert(read('windows/src-tauri/src/platform/windows.rs').includes('preview_ident
 assert(read('windows/src-tauri/src/pipe.rs').includes('preview_identity::PIPE_PREFIX'));
 assert(read('windows/hook/src/win.rs').includes('preview_identity::PIPE_PREFIX'));
 console.log('Preview identifiers, versions, credentials, data, transport and uninstall scope are independent.');
+
+const installer = read('windows/src-tauri/installer/installer.nsi');
+assert.equal(tauri.bundle.windows.nsis.template, 'installer/installer.nsi');
+assert.equal(tauri.bundle.windows.wix.template, 'installer/main.wxs');
+assert(installer.includes('!define INSTALLNAMESPACE "Coucou Community"'));
+assert(installer.includes('Uninstall\\${INSTALLNAMESPACE}'));
+assert(installer.includes('"PreviewIdentifier"'));
+assert(read('windows/src-tauri/src/lib.rs').includes('.app_name(preview_identity::IDENTIFIER)'));
+assert(read('windows/src-tauri/Cargo.toml').includes('default-run = "coucou"'));

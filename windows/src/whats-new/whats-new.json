@@ -2,6 +2,46 @@
   "about": "Independent Mochi Studio Preview release notes; upstream history is preserved in git.",
   "releases": [
     {
+      "version": "0.1.2",
+      "items": [
+        {
+          "icon": "paint",
+          "title": {
+            "en": "Coucou",
+            "zh-Hans": "Coucou",
+            "hi": "Coucou",
+            "es": "Coucou",
+            "ar": "Coucou",
+            "fr": "Coucou",
+            "bn": "Coucou",
+            "pt-BR": "Coucou",
+            "ru": "Coucou",
+            "id": "Coucou",
+            "de": "Coucou",
+            "tr": "Coucou",
+            "ko": "Coucou",
+            "ja": "Coucou"
+          },
+          "detail": {
+            "en": "The app, installer and shortcuts are all called Coucou. Your room and looks stay saved.",
+            "zh-Hans": "应用、安装包和快捷方式均名为 Coucou。你的房间和造型会被保留。",
+            "hi": "ऐप, इंस्टॉलर और शॉर्टकट का नाम Coucou है। कमरा और रूप सुरक्षित रहते हैं।",
+            "es": "La app, el instalador y los accesos se llaman Coucou. Tu habitación y estilos se conservan.",
+            "ar": "اسم التطبيق والمثبت والاختصارات هو Coucou. تبقى غرفتك ومظاهرك محفوظة.",
+            "fr": "L’app, l’installateur et les raccourcis se nomment Coucou. Votre pièce et vos styles sont conservés.",
+            "bn": "অ্যাপ, ইনস্টলার ও শর্টকাটের নাম Coucou। ঘর ও সাজ সংরক্ষিত থাকে।",
+            "pt-BR": "App, instalador e atalhos se chamam Coucou. Seu quarto e visuais são mantidos.",
+            "ru": "Приложение, установщик и ярлыки называются Coucou. Комната и образы сохранены.",
+            "id": "Aplikasi, pemasang, dan pintasan bernama Coucou. Kamar dan tampilan tetap tersimpan.",
+            "de": "App, Installationspaket und Verknüpfungen heißen Coucou. Zimmer und Looks bleiben erhalten.",
+            "tr": "Uygulama, yükleyici ve kısayolların adı Coucou. Odanız ve görünümleriniz korunur.",
+            "ko": "앱, 설치 프로그램, 바로가기 모두 Coucou라는 이름을 사용합니다. 방과 스타일은 유지됩니다.",
+            "ja": "アプリ、インストーラー、ショートカットの名前はすべて Coucou です。部屋とスタイルは保持されます。"
+          }
+        }
+      ]
+    },
+    {
       "version": "0.1.1",
       "items": [
         {

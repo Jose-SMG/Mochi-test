@@ -1,4 +1,12 @@
-# Coucou Community changelog
+# Coucou changelog
+
+## 0.1.2-beta.1
+
+- Use exactly Coucou for the product, installer, registered app and shortcuts; ship Coucou.exe and Coucou.app.
+- Upgrade the previous installer within its private registry namespace and remove obsolete shortcut names that point to that installation.
+- Preserve saved room/outfit preferences, the MSI upgrade GUID, credentials and independent startup registration.
+- Validate a real upgrade from the previous published installer, all visible names, startup and preference retention.
+
 
 ## 0.1.1-beta.1
 

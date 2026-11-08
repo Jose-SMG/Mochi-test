@@ -31,7 +31,7 @@ for platform, folder, extensions in [('macOS','Mochi-Studio-Preview-macOS',{'.dm
     assert {Path(a['name']).suffix for a in manifest['artifacts']} == extensions
     for item in manifest['artifacts']:
         assert Path(item['name']).name == item['name']
-        assert item['name'].startswith('Coucou-Community-' + preview['version'] + '-')
+        assert item['name'].startswith('Coucou-' + preview['version'] + '-')
         artifact = directory / item['name']
         assert artifact.stat().st_size == item['size_bytes']
         assert hashlib.sha256(artifact.read_bytes()).hexdigest() == item['sha256']
@@ -45,7 +45,10 @@ assert proof['passed'] is True and proof['source_commit'] == source
 assert 'edge indicator exists and stays hidden at cold start' in proof['checks']
 assert 'room and appearance preferences survive uninstall' in proof['checks']
 assert 'native app window title is Coucou' in proof['checks']
-assert 'Coucou Community installer name and version registered' in proof['checks']
+assert 'Coucou installer name and version registered' in proof['checks']
+assert 'upgrade replaces the previous executable and shortcut while retaining preferences' in proof['checks']
+assert 'executable and Start menu shortcut are named Coucou' in proof['checks']
+assert 'official application and startup registry values unchanged' in proof['checks']
 shutil.copy2(proof_path, output / proof_path.name)
 (output / 'SHA256SUMS.txt').write_text(''.join(f"{f['sha256']}  {f['name']}\n" for f in files))
 (output / 'release-manifest.json').write_text(json.dumps({'version':preview['version'],'source_commit':source,'source_repository':'Jose-SMG/Mochi-test','official_release':False,'platforms':platforms,'files':files},indent=2)+'\n')

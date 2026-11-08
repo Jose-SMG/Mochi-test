@@ -1,8 +1,8 @@
 <div align="center">
 
-# Coucou Community
+# Coucou
 
-**Coucou in the app; Coucou Community in the installer and launcher.**
+**Coucou: room, appearances and window-edge attachment.**
 
 **Independent community preview:** own app name, identifiers, version and data. The earlier preview that shared Coucou’s identity has been withdrawn. Agent hooks, global shortcuts and automatic updates are disabled. New installers are published only after both native builds and isolation checks pass.
 
@@ -12,7 +12,7 @@ Independent community project based on [Coucou](https://github.com/Louis-CFM/cou
 
 For Coucou itself: [head/face/neck stacking proposal](presentation/review/canvas/STACKING-PROPOSAL.md), awaiting design agreement and PR #1025. The [previous Canvas prototype](presentation/review/canvas/README.md) is retained as a reference. The room remains an independent project.
 
-[Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/coucou-community-v0.1.1-beta.1) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
+[Download the beta](https://github.com/Jose-SMG/Mochi-test/releases/tag/coucou-v0.1.2-beta.1) · [Design preview](presentation/review/README.md) · [Build from source](#build-from-source) · [Known limitations](docs/mochi/KNOWN-ISSUES.md)
 
 ![Room styles and editor](presentation/review/room-preview.gif)
 
@@ -42,10 +42,10 @@ The source includes automatic exposed-edge selection, arm grip, window following
 
 | System | Installer |
 | --- | --- |
-| macOS 15+, Apple Silicon and Intel | [Universal DMG](https://github.com/Jose-SMG/Mochi-test/releases/download/coucou-community-v0.1.1-beta.1/Coucou-Community-0.1.1-beta.1-macOS-universal.dmg) |
-| Windows 10/11 x64 | [Setup EXE](https://github.com/Jose-SMG/Mochi-test/releases/download/coucou-community-v0.1.1-beta.1/Coucou-Community-0.1.1-beta.1-Windows-x64-setup.exe) |
+| macOS 15+, Apple Silicon and Intel | [Universal DMG](https://github.com/Jose-SMG/Mochi-test/releases/download/coucou-v0.1.2-beta.1/Coucou-0.1.2-beta.1-macOS-universal.dmg) |
+| Windows 10/11 x64 | [Setup EXE](https://github.com/Jose-SMG/Mochi-test/releases/download/coucou-v0.1.2-beta.1/Coucou-0.1.2-beta.1-Windows-x64-setup.exe) |
 
-The [release](https://github.com/Jose-SMG/Mochi-test/releases/tag/coucou-community-v0.1.1-beta.1) also includes MSI, portable ZIP, source manifests and SHA-256 checksums. This preview uses `io.github.jose-smg.mochistudio.preview` and its own `MochiStudioPreview` data directory. It does not migrate or remove official Coucou settings. The release link becomes available after the native CI checks pass.
+The [release](https://github.com/Jose-SMG/Mochi-test/releases/tag/coucou-v0.1.2-beta.1) also includes MSI, portable ZIP, source manifests and SHA-256 checksums. This preview uses `io.github.jose-smg.mochistudio.preview` and its own `MochiStudioPreview` data directory. It does not migrate or remove official Coucou settings. The release link becomes available after the native CI checks pass.
 
 Windows is unsigned. The Mac package is ad-hoc signed and not notarized; its optimized Debug configuration excludes the PHONE_LINK/iCloud integration enabled by upstream Release. Browser/system warnings may remain. [Installation guide in Spanish](INSTALLERS.md).
 
@@ -103,6 +103,7 @@ Previous copied installers are withdrawn; the import workflow is disabled by its
 
 | Version | Changes |
 | --- | --- |
+| [0.1.2-beta.1](https://github.com/Jose-SMG/Mochi-test/releases/tag/coucou-v0.1.2-beta.1) | Coucou app, executable, installer and shortcuts; upgrade retains preferences |
 | [0.1.1-beta.1](https://github.com/Jose-SMG/Mochi-test/releases/tag/coucou-community-v0.1.1-beta.1) | Coucou app name, Coucou Community installer, retained preferences and transparent inactive edge marker |
 | [0.1.0-beta.4](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.4) | Hide the window-edge indicator at startup; native Windows visibility regression check |
 | [0.1.0-beta.3](https://github.com/Jose-SMG/Mochi-test/releases/tag/mochi-studio-preview-v0.1.0-beta.3) | Independent community preview, separate identity and data, source-built installers |

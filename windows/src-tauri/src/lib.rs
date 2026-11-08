@@ -891,7 +891,11 @@ pub fn run() {
                 None => show_hub(app, None),
             }
         }))
-        .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec![AUTOSTART_ARG])));
+        .plugin(tauri_plugin_autostart::Builder::new()
+            .app_name(preview_identity::IDENTIFIER)
+            .macos_launcher(MacosLauncher::LaunchAgent)
+            .arg(AUTOSTART_ARG)
+            .build());
     // Where no global shortcut can work, the plugin isn't even started.
     if platform::global_shortcuts_blocked().is_none() {
         builder = builder.plugin(shortcuts::plugin());

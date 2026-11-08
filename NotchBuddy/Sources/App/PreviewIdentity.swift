@@ -16,7 +16,7 @@ enum PreviewIdentity {
     enum PreviewError: LocalizedError {
         case agentHooksDisabled
         var errorDescription: String? {
-            "Agent hook installation is disabled in Mochi Studio Preview. Your Coucou and coding-agent settings are left unchanged."
+            "Agent hook installation is disabled in this Coucou build. Your Coucou and coding-agent settings are left unchanged."
         }
     }
 }
