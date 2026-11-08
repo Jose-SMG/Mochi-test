@@ -611,7 +611,7 @@ mod tests {
         let plan = preview(true).expect("a BOM must not stop the preview");
         assert!(plan.diff.contains("mochi-studio-preview-hook"), "the diff must show what changes");
         let denied = write(true, &plan.fingerprint).unwrap_err();
-        assert!(denied.contains("disabled in Mochi Studio Preview"));
+        assert!(denied.contains("disabled in this Coucou build"));
         assert_eq!(std::fs::read(&path).unwrap(), bytes, "the public preview command must not change official settings");
         let backup = write_confirmed(true, &plan.fingerprint).expect("the private merge engine still supports backups");
 

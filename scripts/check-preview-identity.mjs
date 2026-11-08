@@ -50,3 +50,5 @@ assert(installer.includes('Uninstall\\${INSTALLNAMESPACE}'));
 assert(installer.includes('"PreviewIdentifier"'));
 assert(read('windows/src-tauri/src/lib.rs').includes('.app_name(preview_identity::IDENTIFIER)'));
 assert(read('windows/src-tauri/Cargo.toml').includes('default-run = "coucou"'));
+assert(read('windows/src-tauri/src/mochi_studio.rs').includes('.title(crate::preview_identity::NAME)'));
+assert(read('NotchBuddy/Sources/App/MochiStudioWindow.swift').includes('view.title=PreviewIdentity.name'));
