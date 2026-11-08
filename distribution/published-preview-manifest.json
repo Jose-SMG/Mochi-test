@@ -1,6 +1,6 @@
 {
-  "version": "0.1.0-beta.3",
-  "source_commit": "3713804904bb2ebde17029f3ce6997c589fdfd83",
+  "version": "0.1.0-beta.4",
+  "source_commit": "a71604c9b4dcc55143f19fb78eb3675dfa8aa14f",
   "source_repository": "Jose-SMG/Mochi-test",
   "official_release": false,
   "platforms": {
@@ -12,22 +12,22 @@
       "automatic_updates_enabled": false,
       "source_repository": "Jose-SMG/Mochi-test",
       "channel": "independent community preview",
-      "version": "0.1.0-beta.3",
+      "version": "0.1.0-beta.4",
       "official_release": false,
       "features": [
         "home",
         "perch"
       ],
-      "source_commit": "3713804904bb2ebde17029f3ce6997c589fdfd83",
+      "source_commit": "a71604c9b4dcc55143f19fb78eb3675dfa8aa14f",
       "source_base": "b1bc09de7f7c24a80bd8eca5729b8bee60f66402",
       "platform": "macOS",
       "architecture": "universal",
       "signature": "ad-hoc; not notarized",
       "artifacts": [
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.3-macOS-universal.dmg",
-          "size_bytes": 45003692,
-          "sha256": "225af96b8a4ae798f389f36157d6c34935366eb54d840ec31673ba6a84febc35"
+          "name": "Mochi-Studio-Preview-0.1.0-beta.4-macOS-universal.dmg",
+          "size_bytes": 45005435,
+          "sha256": "6ef2363501805facc4cc937dc9cf2e1f8a6bf97b70674e254840c2489cf20cd7"
         }
       ]
     },
@@ -39,56 +39,56 @@
       "automatic_updates_enabled": false,
       "source_repository": "Jose-SMG/Mochi-test",
       "channel": "independent community preview",
-      "version": "0.1.0-beta.3",
+      "version": "0.1.0-beta.4",
       "official_release": false,
       "features": [
         "home",
         "perch"
       ],
-      "source_commit": "3713804904bb2ebde17029f3ce6997c589fdfd83",
+      "source_commit": "a71604c9b4dcc55143f19fb78eb3675dfa8aa14f",
       "source_base": "b1bc09de7f7c24a80bd8eca5729b8bee60f66402",
       "platform": "Windows",
       "architecture": "x64",
       "signature": "unsigned",
       "artifacts": [
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.3-Windows-x64-portable.zip",
-          "size_bytes": 15899878,
-          "sha256": "641578c4a27bd95aecf575320d3949d3547e280d2942e864b968c430919c4ef7"
+          "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-portable.zip",
+          "size_bytes": 15900458,
+          "sha256": "6b3fae67ef3a93f029a3e02b866cd295e96f27a993187036e2c933de503183b8"
         },
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.3-Windows-x64-setup.exe",
-          "size_bytes": 12292797,
-          "sha256": "98e814a08107c2f6678eeb2ebd5d6fea30e158a2ebf38b893b6146ccda019bca"
+          "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-setup.exe",
+          "size_bytes": 12292505,
+          "sha256": "27dc229c6339f4130dacc4733e044757ef7932807e889e736d6b2eced697fc2d"
         },
         {
-          "name": "Mochi-Studio-Preview-0.1.0-beta.3-Windows-x64.msi",
+          "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64.msi",
           "size_bytes": 15872000,
-          "sha256": "e8c38e00d2a78dcfb5fcce012b482d43d66e0429d5f6a0ebb95e3d474f76c017"
+          "sha256": "83bfefd861222cc783a0add703138c43ac2bb92c760c0018460c1e562801b655"
         }
       ]
     }
   },
   "files": [
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.3-macOS-universal.dmg",
-      "size_bytes": 45003692,
-      "sha256": "225af96b8a4ae798f389f36157d6c34935366eb54d840ec31673ba6a84febc35"
+      "name": "Mochi-Studio-Preview-0.1.0-beta.4-macOS-universal.dmg",
+      "size_bytes": 45005435,
+      "sha256": "6ef2363501805facc4cc937dc9cf2e1f8a6bf97b70674e254840c2489cf20cd7"
     },
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.3-Windows-x64-portable.zip",
-      "size_bytes": 15899878,
-      "sha256": "641578c4a27bd95aecf575320d3949d3547e280d2942e864b968c430919c4ef7"
+      "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-portable.zip",
+      "size_bytes": 15900458,
+      "sha256": "6b3fae67ef3a93f029a3e02b866cd295e96f27a993187036e2c933de503183b8"
     },
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.3-Windows-x64-setup.exe",
-      "size_bytes": 12292797,
-      "sha256": "98e814a08107c2f6678eeb2ebd5d6fea30e158a2ebf38b893b6146ccda019bca"
+      "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64-setup.exe",
+      "size_bytes": 12292505,
+      "sha256": "27dc229c6339f4130dacc4733e044757ef7932807e889e736d6b2eced697fc2d"
     },
     {
-      "name": "Mochi-Studio-Preview-0.1.0-beta.3-Windows-x64.msi",
+      "name": "Mochi-Studio-Preview-0.1.0-beta.4-Windows-x64.msi",
       "size_bytes": 15872000,
-      "sha256": "e8c38e00d2a78dcfb5fcce012b482d43d66e0429d5f6a0ebb95e3d474f76c017"
+      "sha256": "83bfefd861222cc783a0add703138c43ac2bb92c760c0018460c1e562801b655"
     }
   ]
 }

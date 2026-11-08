@@ -2,13 +2,14 @@
 
 # Preview status and known limitations
 
-## Current independent preview: 0.1.0-beta.3
+## Current independent preview: 0.1.0-beta.4
 
-[Both native builds and the source-verified publication passed](https://github.com/Jose-SMG/Mochi-test/actions/runs/42378280556), from `3713804904bb2ebde17029f3ce6997c589fdfd83`.
+[Both native builds and the source-verified publication passed](https://github.com/Jose-SMG/Mochi-test/actions/runs/42521824051), from `a71604c9b4dcc55143f19fb78eb3675dfa8aa14f`.
 
 - Universal macOS bundle: own identifier/version, bundled scene checks, real WebKit rendering/PNG export, ad-hoc signature and DMG verification.
 - Windows: 620 app tests and 36 relay tests passed (7 app tests ignored); EXE, MSI and portable ZIP compiled. Native edge-selection tests passed.
 - The actual NSIS EXE was installed, launched with separate preferences, and uninstalled in CI. The preview executable was removed and all six official Coucou/Claude sentinel files kept their hashes. [Result](../../distribution/windows-coexistence.json).
+- The native edge indicator exists and remains hidden during cold startup, verified through Windows HWND visibility inspection.
 - Both installers' public download URLs returned HTTP 200. The published artifact sizes and GitHub SHA-256 digests match the [source-build manifest](../../distribution/published-preview-manifest.json).
 
 This is a CI smoke/coexistence check. MSI installation, physical Mac/Windows coexistence, and full drag/follow/jump interactions have not been verified. Signing limitations below still apply.
@@ -37,6 +38,6 @@ The screenshots/GIF/videos show the real shared editor with its development brid
 
 Windows is unsigned. Mac is ad-hoc signed and not notarized. Signing scripts have optional identity settings, but trusted signing has not been validated with real certificates.
 
-The Mac beta uses upstream Debug with `-O` optimization and excludes the PHONE_LINK/iCloud flag enabled by upstream Release. The Windows package uses Release. Both packages retain original application identifiers and may replace an existing Coucou installation.
+The Mac beta uses upstream Debug with `-O` optimization and excludes the PHONE_LINK/iCloud flag enabled by upstream Release. The Windows package uses Release. Current packages use the independent preview identifiers and data directories. The withdrawn legacy packages shared Coucou identifiers and must not be installed over Coucou.
 
 The full source is preserved. [Manual QA checklist](QA-CHECKLIST.md) and [signing notes](SIGNING.es.md) describe the remaining work. Neither migration nor a successful package import marks these checks complete.

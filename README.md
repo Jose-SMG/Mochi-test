@@ -91,9 +91,9 @@ The room and native interaction work remain part of this independent project. Th
 
 ## Validation and provenance
 
-**Published preview:** `0.1.0-beta.3`, built from `3713804904bb2ebde17029f3ce6997c589fdfd83` in [the successful native build](https://github.com/Jose-SMG/Mochi-test/actions/runs/42378280556). [Published source and artifact manifest](distribution/published-preview-manifest.json) · [Windows coexistence result](distribution/windows-coexistence.json).
+**Published preview:** `0.1.0-beta.4`, built from `a71604c9b4dcc55143f19fb78eb3675dfa8aa14f` in [the successful native build](https://github.com/Jose-SMG/Mochi-test/actions/runs/42521824051). [Published source and artifact manifest](distribution/published-preview-manifest.json) · [Windows coexistence result](distribution/windows-coexistence.json).
 
-The installers workflow builds both native platforms directly from this repository. Release manifests identify the source commit, repository, independent app identifier and artifact hashes. Publishing requires both builds, isolation checks, native edge-selection tests and a Windows NSIS EXE install/start/uninstall coexistence check to pass. Full native drag/follow/jump validation is still pending.
+The installers workflow builds both native platforms directly from this repository. Release manifests identify the source commit, repository, independent app identifier and artifact hashes. Publishing requires both builds, isolation checks, native edge-selection tests and a Windows NSIS EXE install/start/uninstall coexistence check and native startup marker visibility check to pass. Full native drag/follow/jump validation is still pending.
 
 Previous copied installers are withdrawn; the import workflow is disabled by its retirement guard. See [the isolation changes](docs/mochi/INDEPENDENT-PREVIEW.md).
 
