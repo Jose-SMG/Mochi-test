@@ -52,3 +52,7 @@ assert(read('windows/src-tauri/src/lib.rs').includes('.app_name(preview_identity
 assert(read('windows/src-tauri/Cargo.toml').includes('default-run = "coucou"'));
 assert(read('windows/src-tauri/src/mochi_studio.rs').includes('.title(crate::preview_identity::NAME)'));
 assert(read('NotchBuddy/Sources/App/MochiStudioWindow.swift').includes('view.title=PreviewIdentity.name'));
+// Custom WiX templates are XML files; their registry keys are not Rust strings.
+for (const [, key] of read('windows/src-tauri/installer/main.wxs').matchAll(/\bKey="([^"]*)"/g)) {
+  assert(!key.includes('\\\\'), `Invalid doubled separator in WiX registry key: ${key}`);
+}
