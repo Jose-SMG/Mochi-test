@@ -77,10 +77,10 @@
              search second so that the MSI-specific path takes priority when both keys exist. -->
         <Property Id="INSTALLDIR">
           <!-- First attempt: Search for the default key value (this is how the nsis installer stores the path) -->
-          <RegistrySearch Id="PrevInstallDirNoName" Root="HKCU" Key="Software\{{manufacturer}}\Coucou Community" Type="raw" />
+          <RegistrySearch Id="PrevInstallDirNoName" Root="HKCU" Key="Software&#92;{{manufacturer}}&#92;Coucou Community" Type="raw" />
 
           <!-- Second attempt: Search for "InstallDir" which takes priority if found (this is how the msi installer stores the path) -->
-          <RegistrySearch Id="PrevInstallDirWithName" Root="HKCU" Key="Software\{{manufacturer}}\Coucou Community" Name="InstallDir" Type="raw" />
+          <RegistrySearch Id="PrevInstallDirWithName" Root="HKCU" Key="Software&#92;{{manufacturer}}&#92;Coucou Community" Name="InstallDir" Type="raw" />
         </Property>
 
         <!-- launch app checkbox -->
@@ -116,7 +116,7 @@
                 <Component Id="ApplicationShortcutDesktop" Guid="*">
                     <Shortcut Id="ApplicationDesktopShortcut" Name="{{product_name}}" Description="Runs {{product_name}}" Target="[!Path]" WorkingDirectory="INSTALLDIR" />
                     <RemoveFolder Id="DesktopFolder" On="uninstall" />
-                    <RegistryValue Root="HKCU" Key="Software\{{manufacturer}}\Coucou Community" Name="Desktop Shortcut" Type="integer" Value="1" KeyPath="yes" />
+                    <RegistryValue Root="HKCU" Key="Software&#92;{{manufacturer}}&#92;Coucou Community" Name="Desktop Shortcut" Type="integer" Value="1" KeyPath="yes" />
                 </Component>
             </Directory>
             <Directory Id="$(var.PlatformProgramFilesFolder)" Name="PFiles">
@@ -130,22 +130,22 @@
         <DirectoryRef Id="INSTALLDIR">
             <!-- Per-machine identity has its own stable registry component/keypath. -->
             <Component Id="InstallerIdentity" Guid="*" Win64="$(var.Win64)">
-                <RegistryValue Root="HKLM" Key="Software\{{bundle_id}}\InstallerIdentity" Name="ProductCode" Type="string" Value="[ProductCode]" KeyPath="yes" />
+                <RegistryValue Root="HKLM" Key="Software&#92;{{bundle_id}}&#92;InstallerIdentity" Name="ProductCode" Type="string" Value="[ProductCode]" KeyPath="yes" />
             </Component>
             <Component Id="RegistryEntries" Guid="*">
-                <RegistryKey Root="HKCU" Key="Software\{{manufacturer}}\Coucou Community">
+                <RegistryKey Root="HKCU" Key="Software&#92;{{manufacturer}}&#92;Coucou Community">
                     <RegistryValue Name="InstallDir" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
 
                 </RegistryKey>
                 <!-- Change the Root to HKCU for perUser installations -->
                 {{#each deep_link_protocols as |protocol| ~}}
-                <RegistryKey Root="HKLM" Key="Software\Classes\{{protocol}}">
+                <RegistryKey Root="HKLM" Key="Software&#92;Classes&#92;{{protocol}}">
                     <RegistryValue Type="string" Name="URL Protocol" Value=""/>
                     <RegistryValue Type="string" Value="URL:{{bundle_id}} protocol"/>
                     <RegistryKey Key="DefaultIcon">
                         <RegistryValue Type="string" Value="&quot;[!Path]&quot;,0" />
                     </RegistryKey>
-                    <RegistryKey Key="shell\open\command">
+                    <RegistryKey Key="shell&#92;open&#92;command">
                         <RegistryValue Type="string" Value="&quot;[!Path]&quot; &quot;%1&quot;" />
                     </RegistryKey>
                 </RegistryKey>
@@ -192,7 +192,7 @@
 							  On="uninstall" />
 
 				<RegistryValue Root="HKCU"
-							   Key="Software\{{manufacturer}}\Coucou Community"
+							   Key="Software&#92;{{manufacturer}}&#92;Coucou Community"
 							   Name="Uninstaller Shortcut"
 							   Type="integer"
 							   Value="1"
@@ -211,7 +211,7 @@
                     <ShortcutProperty Key="System.AppUserModel.ID" Value="{{bundle_id}}"/>
                 </Shortcut>
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-                <RegistryValue Root="HKCU" Key="Software\{{manufacturer}}\Coucou Community" Name="Start Menu Shortcut" Type="integer" Value="1" KeyPath="yes"/>
+                <RegistryValue Root="HKCU" Key="Software&#92;{{manufacturer}}&#92;Coucou Community" Name="Start Menu Shortcut" Type="integer" Value="1" KeyPath="yes"/>
            </Component>
         </DirectoryRef>
 
@@ -291,9 +291,9 @@
         {{#if install_webview}}
         <!-- WebView2 -->
         <Property Id="INSTALLED_WEBVIEW2_VERSION">
-            <RegistrySearch Id="Webview2VersionSystemx64" Root="HKLM" Key="SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" Name="pv" Type="raw" />
-            <RegistrySearch Id="Webview2VersionSystemx86" Root="HKLM" Key="SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" Name="pv" Type="raw" />
-            <RegistrySearch Id="Webview2VersionUser" Root="HKCU" Key="SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" Name="pv" Type="raw"/>
+            <RegistrySearch Id="Webview2VersionSystemx64" Root="HKLM" Key="SOFTWARE&#92;WOW6432Node&#92;Microsoft&#92;EdgeUpdate&#92;Clients&#92;{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" Name="pv" Type="raw" />
+            <RegistrySearch Id="Webview2VersionSystemx86" Root="HKLM" Key="SOFTWARE&#92;Microsoft&#92;EdgeUpdate&#92;Clients&#92;{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" Name="pv" Type="raw" />
+            <RegistrySearch Id="Webview2VersionUser" Root="HKCU" Key="SOFTWARE&#92;Microsoft&#92;EdgeUpdate&#92;Clients&#92;{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" Name="pv" Type="raw"/>
         </Property>
 
         {{#if download_bootstrapper}}
@@ -332,9 +332,9 @@
         <!-- Update WebView2 if minimum version requirement not met -->
         <Property Id="MINIMUM_WEBVIEW2_VERSION" Value="{{minimum_webview2_version}}" />
         <Property Id="EDGEUPDATE_PATH">
-            <RegistrySearch Id="EdgeUpdateLocalMachine64" Root="HKLM" Key="SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate" Name="path" Type="raw" />
-            <RegistrySearch Id="EdgeUpdateLocalMachine32" Root="HKLM" Key="SOFTWARE\Microsoft\EdgeUpdate" Name="path" Type="raw"/>
-            <RegistrySearch Id="EdgeUpdateCurrentUser" Root="HKCU" Key="SOFTWARE\Microsoft\EdgeUpdate" Name="path" Type="raw"/>
+            <RegistrySearch Id="EdgeUpdateLocalMachine64" Root="HKLM" Key="SOFTWARE&#92;WOW6432Node&#92;Microsoft&#92;EdgeUpdate" Name="path" Type="raw" />
+            <RegistrySearch Id="EdgeUpdateLocalMachine32" Root="HKLM" Key="SOFTWARE&#92;Microsoft&#92;EdgeUpdate" Name="path" Type="raw"/>
+            <RegistrySearch Id="EdgeUpdateCurrentUser" Root="HKCU" Key="SOFTWARE&#92;Microsoft&#92;EdgeUpdate" Name="path" Type="raw"/>
         </Property>
         <!-- Chromium updater docs: https://source.chromium.org/chromium/chromium/src/+/main:docs/updater/user_manual.md -->
         <!-- Modified from "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft EdgeWebView\ModifyPath" -->

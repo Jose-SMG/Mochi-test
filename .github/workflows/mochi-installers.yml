@@ -10,8 +10,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: mochi-preview-${{ github.ref }}-${{ github.sha }}
-  cancel-in-progress: false
+  # Stable queue key retained from the previous per-commit queue during migration.
+  # New commits cancel superseded builds before they can publish an older source.
+  group: mochi-preview-${{ github.ref }}-dd86bb9d8ef453539cd4141e9cf2a36f39df484d
+  cancel-in-progress: true
 
 jobs:
   identity:
